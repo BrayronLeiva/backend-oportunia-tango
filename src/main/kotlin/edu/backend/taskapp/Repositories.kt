@@ -1,6 +1,7 @@
 package edu.backend.taskapp
 
 import edu.backend.taskapp.Entities.Question
+import edu.backend.taskapp.Entities.Recommendation
 import edu.backend.taskapp.Entities.Student
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -16,3 +17,6 @@ interface StudentRepository: JpaRepository<Student, Long>
 
 @Repository
 interface QuestionRepository: JpaRepository<Question, Long>
+
+@Repository
+interface RecommendationRepository: JpaRepository<Recommendation, Long>

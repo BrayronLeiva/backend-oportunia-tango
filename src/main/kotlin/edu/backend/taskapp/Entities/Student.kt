@@ -16,7 +16,7 @@ import java.util.Date
 
 
 @Entity
-@Table(name = "student")
+@Table(name = "students")
 data class Student(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
