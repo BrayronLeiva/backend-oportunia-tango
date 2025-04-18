@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
@@ -34,6 +36,15 @@ data class Student(
 
 
     // Entity Relationship
+    @ManyToMany
+    @JoinTable(
+        name = "student_qualification",
+        joinColumns = [JoinColumn(name = "student_id")],
+        inverseJoinColumns = [JoinColumn(name = "qualification_id")]
+    )
+    var qualifications: MutableSet<Qualification> = mutableSetOf(),
+
+
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     var user: User,

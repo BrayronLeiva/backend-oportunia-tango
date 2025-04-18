@@ -9,29 +9,20 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "certifications")
-data class Certification(
+@Table(name = "qualifications")
+data class Qualification(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
 
     var name: String,
 
-    val provider: String,
-
-    var file_path: String,
-
-    // Entity Relationship
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
-    var student: Student
-
 
 
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Certification) return false
+        if (other !is Qualification) return false
 
         if (id != other.id) return false
 
@@ -43,7 +34,7 @@ data class Certification(
     }
 
     override fun toString(): String {
-        return "Certification(id=$id, name='$name', provider='$provider', student=$student)"
+        return "Qualification(id=$id, name='$name')"
     }
 
 
