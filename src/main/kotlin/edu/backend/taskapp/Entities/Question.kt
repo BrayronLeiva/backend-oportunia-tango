@@ -26,6 +26,7 @@ data class Question(
     //@JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
     //var company: Company,
 
+
     ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
