@@ -1,4 +1,4 @@
-package edu.backend.taskapp.Entities
+package edu.backend.taskapp.entities
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -6,31 +6,32 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "questions")
-data class Question(
+@Table(name = "recommendations")
+data class Recommendation(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
 
-    var question: String,
+    var details: String,
 
-    var answer: String,
 
     // Entity Relationship
-    //--DESCOMENTAR CUANDO ESTE LISTO EL MODELO COMPANY--
-    //@ManyToOne
-    //@JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
-    //var company: Company,
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
+    var student: Student,
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
+    var company: Company,
 
 
-    ) {
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Question) return false
+        if (other !is Recommendation) return false
 
         if (id != other.id) return false
 
@@ -42,7 +43,7 @@ data class Question(
     }
 
     override fun toString(): String {
-        return "Question(id=$id, question='$question', answer='$answer')"
+        return "Recommendation(id=$id, details='$details', student=$student)"
     }
 
 

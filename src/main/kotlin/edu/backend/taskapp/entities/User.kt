@@ -1,4 +1,4 @@
-package edu.backend.taskapp.Entities
+package edu.backend.taskapp.entities
 
 import edu.backend.taskapp.Task
 import jakarta.persistence.Entity

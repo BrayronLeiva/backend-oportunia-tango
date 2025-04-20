@@ -1,6 +1,6 @@
 package edu.backend.taskapp
 
-import edu.backend.taskapp.Entities.User
+import edu.backend.taskapp.entities.User
 import jakarta.persistence.*
 import java.util.*
 

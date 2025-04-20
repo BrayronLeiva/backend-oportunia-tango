@@ -1,10 +1,16 @@
 package edu.backend.taskapp
 
-import edu.backend.taskapp.Entities.Certification
-import edu.backend.taskapp.Entities.Qualification
-import edu.backend.taskapp.Entities.Question
-import edu.backend.taskapp.Entities.Recommendation
-import edu.backend.taskapp.Entities.Student
+import edu.backend.taskapp.entities.Certification
+import edu.backend.taskapp.entities.Company
+import edu.backend.taskapp.entities.Internship
+import edu.backend.taskapp.entities.InternshipLocation
+import edu.backend.taskapp.entities.LocationCompany
+import edu.backend.taskapp.entities.Qualification
+import edu.backend.taskapp.entities.Question
+import edu.backend.taskapp.entities.RatingCompanyStudent
+import edu.backend.taskapp.entities.Recommendation
+import edu.backend.taskapp.entities.Student
+import edu.backend.taskapp.entities.Request
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
@@ -28,3 +34,21 @@ interface CertificationRepository: JpaRepository<Certification, Long>
 
 @Repository
 interface QualificationRepository: JpaRepository<Qualification, Long>
+
+@Repository
+interface InternshipRepository: JpaRepository<Internship, Long>
+
+@Repository
+interface CompanyRepository: JpaRepository<Company, Long>
+
+@Repository
+interface LocationCompanyRepository: JpaRepository<LocationCompany, Long>
+
+@Repository
+interface InternshipLocationRepository: JpaRepository<InternshipLocation, Long>
+
+@Repository
+interface RatingCompanyStudentRepository: JpaRepository<RatingCompanyStudent, Long>
+
+@Repository
+interface RequestRepository: JpaRepository<Request, Long>

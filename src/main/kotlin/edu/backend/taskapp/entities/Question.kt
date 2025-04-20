@@ -1,4 +1,4 @@
-package edu.backend.taskapp.Entities
+package edu.backend.taskapp.entities
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -9,29 +9,26 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "certifications")
-data class Certification(
+@Table(name = "questions")
+data class Question(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
 
-    var name: String,
+    var question: String,
 
-    val provider: String,
-
-    var file_path: String,
+    var answer: String,
 
     // Entity Relationship
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
-    var student: Student
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
+    var company: Company,
 
 
-
-) {
+    ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Certification) return false
+        if (other !is Question) return false
 
         if (id != other.id) return false
 
@@ -43,8 +40,6 @@ data class Certification(
     }
 
     override fun toString(): String {
-        return "Certification(id=$id, name='$name', provider='$provider', student=$student)"
+        return "Question(id=$id, question='$question', answer='$answer')"
     }
-
-
 }

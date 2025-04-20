@@ -1,30 +1,26 @@
-package edu.backend.taskapp.Entities
+package edu.backend.taskapp.entities
 
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.ManyToMany
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "privilege")
-data class Privilege(
+@Table(name = "qualifications")
+data class Qualification(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id:Long? = null,
-    var name: String,
-    // Entity Relationship
-    @ManyToMany(fetch = FetchType.LAZY)
-    var userList: Set<User>,
-    @ManyToMany(fetch = FetchType.LAZY)
-    var roleList: Set<Role>,
+    var id: Long? = null,
 
-    ) {
+    var name: String,
+
+
+
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Privilege) return false
+        if (other !is Qualification) return false
 
         if (id != other.id) return false
 
@@ -36,6 +32,8 @@ data class Privilege(
     }
 
     override fun toString(): String {
-        return "Privilege(id=$id, name='$name', userList=$userList, roleList=$roleList)"
+        return "Qualification(id=$id, name='$name')"
     }
+
+
 }
