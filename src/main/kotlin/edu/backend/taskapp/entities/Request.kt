@@ -12,12 +12,12 @@ data class Request(
     var state: Boolean,
 
     @ManyToOne
-    @JoinColumn(name = "student", nullable = false, referencedColumnName = "id_student")
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
     var student: Student,
 
     @ManyToOne
-    @JoinColumn(name = "internship_location", nullable = false, referencedColumnName = "id_int_loc")
-    var internship: InternshipLocation,
+    @JoinColumn(name = "internship_location_id", nullable = false, referencedColumnName = "id")
+    var internshipLocations: InternshipLocation,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,6 +29,6 @@ data class Request(
     override fun hashCode(): Int = id?.hashCode() ?: 0
 
     override fun toString(): String {
-        return "Request(id=$id, student=$student, internship=$internship, state=$state)"
+        return "Request(id=$id, student=$student, internship=$internshipLocations, state=$state)"
     }
 }

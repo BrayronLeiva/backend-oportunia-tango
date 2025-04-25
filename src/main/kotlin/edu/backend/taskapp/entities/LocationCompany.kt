@@ -18,7 +18,7 @@ data class LocationCompany(
     var contact: Int,
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id_company")
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
     var company: Company,
 
     @OneToMany(mappedBy = "locationCompany", cascade = [CascadeType.ALL], orphanRemoval = true)

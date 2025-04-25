@@ -16,11 +16,11 @@ data class RatingCompanyStudent(
     var comment: String,
 
     @ManyToOne
-    @JoinColumn(name = "student", nullable = false, referencedColumnName = "id_student")
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
     var student: Student,
 
     @ManyToOne
-    @JoinColumn(name = "company", nullable = false, referencedColumnName = "id_company")
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
     var company: Company,
 ) {
     override fun equals(other: Any?): Boolean {

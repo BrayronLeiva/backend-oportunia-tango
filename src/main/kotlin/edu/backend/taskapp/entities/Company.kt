@@ -36,7 +36,7 @@ data class Company(
     var internshipType: String,
 
     @OneToOne
-    @JoinColumn(name = "user", nullable = false, referencedColumnName = "id_user")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     var user: User,
 
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], orphanRemoval = true)
