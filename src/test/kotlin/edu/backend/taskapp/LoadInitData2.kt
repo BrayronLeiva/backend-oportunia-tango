@@ -13,19 +13,20 @@ import org.springframework.test.context.jdbc.Sql
 @Sql(
     statements = [
         "DELETE FROM public.certifications",
-        "DELETE FROM public.students"
+        "DELETE FROM public.students",
+        "DELETE FROM public.users"
     ],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 @Sql(
-    scripts = ["/import_students.sql", "/import_tasks.sql"],
+    scripts = ["/import-users.sql", "/import-students.sql", "/import-certifications.sql"],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class LoadInitData2(
     @Autowired
     val certificationRepository: CertificationRepository,
     @Autowired
-    val userRepository: UserRepository
+    val studentRepository: StudentRepository
 ) {
 
     @Test
@@ -47,16 +48,15 @@ class LoadInitData2(
 
     @Test
     fun `guardar nueva certificacion incrementa el total`() {
-        val user1 = userRepository.findById(1).orElseThrow()
+
+        val student1 = studentRepository.findById(1).orElseThrow()
         val nueva = Certification(
             name = "Spring Professional",
             provider = "VMware",
             file_path = "/files/springpro.pdf",
-            student = Student(id = 1, name = "", identification = "118908790", personalInfo = "None", experience = "None",
-                rating = 5.0, user = user1)
-            )
+            student = student1)
 
-        certificationRepository.save(nueva)
+        certificationRepository.save<Certification>(nueva)
 
         val total = certificationRepository.count()
         Assertions.assertEquals(4, total)
