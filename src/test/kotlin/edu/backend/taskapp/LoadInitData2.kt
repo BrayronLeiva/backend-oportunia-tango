@@ -51,6 +51,7 @@ class LoadInitData2(
 
         val student1 = studentRepository.findById(1).orElseThrow()
         val nueva = Certification(
+            4,
             name = "Spring Professional",
             provider = "VMware",
             file_path = "/files/springpro.pdf",
