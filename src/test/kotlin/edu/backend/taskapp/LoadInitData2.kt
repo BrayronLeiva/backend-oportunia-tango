@@ -1,6 +1,7 @@
 package edu.backend.taskapp
 
 import edu.backend.taskapp.entities.Certification
+import edu.backend.taskapp.entities.Qualification
 import edu.backend.taskapp.entities.Student
 import edu.backend.taskapp.entities.User
 import org.junit.jupiter.api.*
@@ -14,19 +15,22 @@ import org.springframework.test.context.jdbc.Sql
     statements = [
         "DELETE FROM public.certifications",
         "DELETE FROM public.students",
-        "DELETE FROM public.users"
+        "DELETE FROM public.users",
+        "DELETE FROM public.qualifications"
     ],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 @Sql(
-    scripts = ["/import-users.sql", "/import-students.sql", "/import-certifications.sql"],
+    scripts = ["/import-users.sql", "/import-students.sql", "/import-certifications.sql", "/import-qualifications.sql"],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class LoadInitData2(
     @Autowired
     val certificationRepository: CertificationRepository,
     @Autowired
-    val studentRepository: StudentRepository
+    val studentRepository: StudentRepository,
+    @Autowired
+    val qualificationRepository: QualificationRepository
 ) {
 
     @Test
@@ -68,6 +72,44 @@ class LoadInitData2(
         certificationRepository.deleteById(3)
         Assertions.assertFalse(certificationRepository.existsById(3))
         Assertions.assertEquals(2, certificationRepository.count())
+    }
+
+    //TEST PARA QUALIFICATIONS
+    @Test
+    fun `findAll devuelve las habilidades esperadas`() {
+        val skills = qualificationRepository.findAll()
+        Assertions.assertEquals(4, skills.size)
+    }
+
+    @Test
+    fun `findById devuelve la habilidad correcta`() {
+        val skill = qualificationRepository.findById(1).orElseThrow()
+        Assertions.assertAll(
+            { Assertions.assertEquals(1, skill.id) },
+            { Assertions.assertEquals("English", skill.name) }
+        )
+    }
+
+    @Test
+    fun `guardar nueva habilidad incrementa el total`() {
+
+
+        val nueva = Qualification(
+            5,
+            name = "Spanish"
+        )
+
+        qualificationRepository.save<Qualification>(nueva)
+
+        val total = qualificationRepository.count()
+        Assertions.assertEquals(5, total)
+    }
+
+    @Test
+    fun `eliminar habilidad reduce el total`() {
+        qualificationRepository.deleteById(3)
+        Assertions.assertFalse(qualificationRepository.existsById(3))
+        Assertions.assertEquals(3, certificationRepository.count())
     }
 
 }
