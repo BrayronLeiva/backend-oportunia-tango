@@ -11,9 +11,13 @@ import edu.backend.taskapp.entities.RatingCompanyStudent
 import edu.backend.taskapp.entities.Recommendation
 import edu.backend.taskapp.entities.Student
 import edu.backend.taskapp.entities.Request
+import edu.backend.taskapp.entities.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
+
+@Repository
+interface UserRepository : JpaRepository<User, Long> {}
 @Repository
 interface PriorityRepository: JpaRepository<Priority, Long>
 

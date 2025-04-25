@@ -10,11 +10,11 @@ data class InternshipLocation(
     var id: Long? = null,
 
     @ManyToOne
-    @JoinColumn(name = "location", nullable = false, referencedColumnName = "id_location")
+    @JoinColumn(name = "location_id", nullable = false, referencedColumnName = "id")
     var locationCompany: LocationCompany,
 
     @ManyToOne
-    @JoinColumn(name = "internship", nullable = false, referencedColumnName = "id_internship")
+    @JoinColumn(name = "internship_id", nullable = false, referencedColumnName = "id")
     var internship: Internship,
 
     @OneToMany(mappedBy = "internshipLocations", cascade = [CascadeType.ALL], orphanRemoval = true)
