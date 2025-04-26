@@ -2,6 +2,8 @@ package edu.backend.taskapp
 
 import edu.backend.taskapp.entities.Certification
 import edu.backend.taskapp.entities.Qualification
+import edu.backend.taskapp.entities.Question
+import edu.backend.taskapp.entities.Recommendation
 import edu.backend.taskapp.entities.Student
 import edu.backend.taskapp.entities.User
 import org.junit.jupiter.api.*
@@ -14,14 +16,19 @@ import org.springframework.test.context.jdbc.Sql
 @Sql(
     statements = [
         "DELETE FROM public.certifications",
+        "DELETE FROM public.recommendations",
         "DELETE FROM public.students",
-        "DELETE FROM public.users",
-        "DELETE FROM public.qualifications"
+        "DELETE FROM public.qualifications",
+        "DELETE FROM public.questions",
+        "DELETE FROM public.companies",
+        "DELETE FROM public.users"
+
     ],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 @Sql(
-    scripts = ["/import-users.sql", "/import-students.sql", "/import-certifications.sql", "/import-qualifications.sql"],
+    scripts = ["/import-users.sql", "/import-students.sql", "/import-certifications.sql", "/import-qualifications.sql", "/import-companies.sql"
+              ,"/import-questions.sql", "/import-recommendations.sql"],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class LoadInitData2(
@@ -30,17 +37,25 @@ class LoadInitData2(
     @Autowired
     val studentRepository: StudentRepository,
     @Autowired
-    val qualificationRepository: QualificationRepository
+    val qualificationRepository: QualificationRepository,
+    @Autowired
+    val questionRepository: QuestionRepository,
+    @Autowired
+    val companyRepository: CompanyRepository,
+    @Autowired
+    val recommendationRepository: RecommendationRepository
+
 ) {
+    //TEST DE CERTIFICATIONS
 
     @Test
-    fun `findAll devuelve las certificaciones esperadas`() {
+    fun `findAll returns the expected certifications`() {
         val certs = certificationRepository.findAll()
         Assertions.assertEquals(3, certs.size)
     }
 
     @Test
-    fun `findById devuelve la certificacion correcta`() {
+    fun `findById returns the correct certification`() {
         val cert = certificationRepository.findById(1).orElseThrow()
         Assertions.assertAll(
             { Assertions.assertEquals(1, cert.id) },
@@ -51,8 +66,7 @@ class LoadInitData2(
     }
 
     @Test
-    fun `guardar nueva certificacion incrementa el total`() {
-
+    fun `saving new certification increments the total`() {
         val student1 = studentRepository.findById(1).orElseThrow()
         val nueva = Certification(
             4,
@@ -68,21 +82,23 @@ class LoadInitData2(
     }
 
     @Test
-    fun `eliminar certificacion reduce el total`() {
+    fun `deleting certification decreases the total`() {
         certificationRepository.deleteById(3)
         Assertions.assertFalse(certificationRepository.existsById(3))
         Assertions.assertEquals(2, certificationRepository.count())
     }
 
-    //TEST PARA QUALIFICATIONS
+
+    //TESTS PARA QUALIFICATIONS
+
     @Test
-    fun `findAll devuelve las habilidades esperadas`() {
+    fun `findAll returns the expected skills`() {
         val skills = qualificationRepository.findAll()
         Assertions.assertEquals(4, skills.size)
     }
 
     @Test
-    fun `findById devuelve la habilidad correcta`() {
+    fun `findById returns the correct skill`() {
         val skill = qualificationRepository.findById(1).orElseThrow()
         Assertions.assertAll(
             { Assertions.assertEquals(1, skill.id) },
@@ -91,9 +107,7 @@ class LoadInitData2(
     }
 
     @Test
-    fun `guardar nueva habilidad incrementa el total`() {
-
-
+    fun `saving new skill increments the total`() {
         val nueva = Qualification(
             5,
             name = "Spanish"
@@ -106,10 +120,93 @@ class LoadInitData2(
     }
 
     @Test
-    fun `eliminar habilidad reduce el total`() {
+    fun `deleting skill decreases the total`() {
         qualificationRepository.deleteById(3)
         Assertions.assertFalse(qualificationRepository.existsById(3))
-        Assertions.assertEquals(3, certificationRepository.count())
+        Assertions.assertEquals(3, qualificationRepository.count())
     }
+
+
+    //TEST PARA QUESTIONS
+
+    @Test
+    fun `findAll returns the expected questions`() {
+        val skills = questionRepository.findAll()
+        Assertions.assertEquals(4, skills.size)
+    }
+
+    @Test
+    fun `findById returns the correct question`() {
+        val skill = questionRepository.findById(1).orElseThrow()
+        Assertions.assertAll(
+            { Assertions.assertEquals(1, skill.id) },
+            { Assertions.assertEquals("Do you offer night shifts?", skill.question) },
+            { Assertions.assertEquals("Yes, just choose the timezone in preferences.", skill.answer) }
+        )
+    }
+
+    @Test
+    fun `saving new question increments the total`() {
+
+        val company1 = companyRepository.findById(1).orElseThrow()
+        val nueva = Question(
+            5, "English is required?","No",company1
+        )
+
+        questionRepository.save<Question>(nueva)
+
+        val total = questionRepository.count()
+        Assertions.assertEquals(5, total)
+    }
+
+    @Test
+    fun `deleting question decreases the total`() {
+        questionRepository.deleteById(3)
+        Assertions.assertFalse(questionRepository.existsById(3))
+        Assertions.assertEquals(3, questionRepository.count())
+    }
+
+    // TEST DE RECOMMENDATION
+
+    @Test
+    fun `findAll returns the expected recommendations`() {
+        val recommds = recommendationRepository.findAll()
+        Assertions.assertEquals(3, recommds.size)
+    }
+
+    @Test
+    fun `findById returns the correct recommendation`() {
+        val recommendation = recommendationRepository.findById(3).orElseThrow()
+        Assertions.assertAll(
+            { Assertions.assertEquals(3, recommendation.id) },
+            { Assertions.assertEquals("Excelente actitud, proactividad y habilidades técnicas destacables.",
+                recommendation.details) },
+            { Assertions.assertEquals(3, recommendation.student.id) },
+            { Assertions.assertEquals(2,recommendation.company.id)}
+        )
+    }
+
+    @Test
+    fun `saving new recommendation increments the total`() {
+
+        val company1 = companyRepository.findById(1).orElseThrow()
+        val student1 = studentRepository.findById(1).orElseThrow()
+        val nueva = Recommendation(
+            4, "He was so responsable",student1,company1
+        )
+
+        recommendationRepository.save<Recommendation>(nueva)
+
+        val total = recommendationRepository.count()
+        Assertions.assertEquals(4, total)
+    }
+
+    @Test
+    fun `deleting recommendation decreases the total`() {
+        recommendationRepository.deleteById(3)
+        Assertions.assertFalse(recommendationRepository.existsById(3))
+        Assertions.assertEquals(2, recommendationRepository.count())
+    }
+
 
 }

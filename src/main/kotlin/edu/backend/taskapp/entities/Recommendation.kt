@@ -12,7 +12,7 @@ import jakarta.persistence.Table
 @Table(name = "recommendations")
 data class Recommendation(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
 
     var details: String,
