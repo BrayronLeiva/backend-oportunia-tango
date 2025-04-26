@@ -17,7 +17,7 @@ import jakarta.persistence.Table
 @Table(name = "students")
 data class Student(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
 
     var name: String,

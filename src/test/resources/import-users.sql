@@ -14,4 +14,6 @@ VALUES (1,'2020-08-30 18:23:52.000000', 'mike@guzmanalan.com', true, 'Maikol',
        (4, '2024-04-25 10:10:00', 'laura.martinez@example.com', true, 'Laura',
         'Martínez', 'laura789', false),
        (5, '2024-04-25 10:15:00', 'andres.solis@example.com', true, 'Andrés',
-        'Solis', 'andres321', false);
+        'Solis', 'andres321', false),
+       (6, '2024-04-26 11:15:00', 'pepe.mendez@example.com', true, 'Pepe',
+        'Mendez', 'pepe124', false);
