@@ -6,8 +6,13 @@ import jakarta.persistence.*
 @Table(name = "internships_locations")
 data class InternshipLocation(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "internshiplocation_seq")
+    @SequenceGenerator(
+        name = "internshiplocation_seq",
+        sequenceName = "internshiplocation_id_seq",
+        allocationSize = 1
+    )
+    val id: Long? = null,
 
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false, referencedColumnName = "id")

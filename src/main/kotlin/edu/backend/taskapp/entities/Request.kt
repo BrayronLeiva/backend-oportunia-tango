@@ -6,8 +6,13 @@ import jakarta.persistence.*
 @Table(name = "requests")
 data class Request(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "requests_seq")
+    @SequenceGenerator(
+        name = "requests_seq",
+        sequenceName = "requests_id_seq",
+        allocationSize = 1
+    )
+    val id: Long? = null,
 
     var state: Boolean,
 

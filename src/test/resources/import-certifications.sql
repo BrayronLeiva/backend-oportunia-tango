@@ -1,4 +1,6 @@
-INSERT INTO certifications (id, name, provider, file_path, student_id) VALUES
-    (1, 'Java SE 11 Developer', 'Oracle', '/files/java11.pdf', 1),
-    (2, 'AWS Cloud Practitioner', 'Amazon', '/files/awsccp.pdf', 1),
-    (3, 'Kotlin Associate', 'JetBrains', '/files/kotlincert.pdf', 1);
+ALTER SEQUENCE certifications_id_seq RESTART WITH 1;
+ALTER TABLE certifications ALTER COLUMN id SET DEFAULT nextval('certifications_id_seq');
+INSERT INTO public.certifications (name, provider, file_path, student_id) VALUES
+    ('Java SE 11 Developer', 'Oracle', '/files/java11.pdf', 1),
+    ('AWS Cloud Practitioner', 'Amazon', '/files/awsccp.pdf', 1),
+    ('Kotlin Associate', 'JetBrains', '/files/kotlincert.pdf', 1);

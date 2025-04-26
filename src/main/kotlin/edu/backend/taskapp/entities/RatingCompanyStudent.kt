@@ -3,11 +3,16 @@ package edu.backend.taskapp.entities
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "ratings_company_student")
+@Table(name = "ratings_companies_students")
 data class RatingCompanyStudent(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ratings_seq")
+    @SequenceGenerator(
+        name = "ratings_seq",
+        sequenceName = "ratings_id_seq",
+        allocationSize = 1
+    )
+    val id: Long? = null,
 
     var rating: Double,
 

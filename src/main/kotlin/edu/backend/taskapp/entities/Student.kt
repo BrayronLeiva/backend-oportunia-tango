@@ -10,6 +10,7 @@ import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
+import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 
 
@@ -17,8 +18,13 @@ import jakarta.persistence.Table
 @Table(name = "students")
 data class Student(
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "students_seq")
+    @SequenceGenerator(
+        name = "students_seq",
+        sequenceName = "students_id_seq",
+        allocationSize = 1
+    )
+    val id: Long? = null,
 
     var name: String,
 

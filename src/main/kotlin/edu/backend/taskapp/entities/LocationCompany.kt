@@ -6,8 +6,13 @@ import jakarta.persistence.*
 @Table(name = "locations_company")
 data class LocationCompany(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "locationcompany_seq")
+    @SequenceGenerator(
+        name = "locationcompany_seq",
+        sequenceName = "locationcompany_id_seq",
+        allocationSize = 1
+    )
+    val id: Long? = null,
 
     var latitude: Double,
 

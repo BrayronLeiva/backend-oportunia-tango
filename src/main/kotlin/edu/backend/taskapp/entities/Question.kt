@@ -6,13 +6,19 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 
 @Entity
 @Table(name = "questions")
 data class Question(
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "questions_seq")
+    @SequenceGenerator(
+        name = "questions_seq",
+        sequenceName = "questions_id_seq",
+        allocationSize = 1
+    )
     var id: Long? = null,
 
     var question: String,
