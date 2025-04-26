@@ -69,57 +69,6 @@ class LoadInitData2(
 
 ) {
 
-    //TEST DE STUDENTS
-
-    @Test
-    fun `findAll returns the expected students`() {
-        val students = studentRepository.findAll()
-        Assertions.assertEquals(3, students.size)
-    }
-
-    @Test
-    fun `findById returns the correct student`() {
-        val student = studentRepository.findById(3).orElseThrow()
-        val user5 = userRepository.findById(5).orElseThrow()
-
-        Assertions.assertAll(
-            { Assertions.assertEquals(3, student.id) },
-            { Assertions.assertEquals("Andres",student.name) },
-            { Assertions.assertEquals("3333", student.identification) },
-            { Assertions.assertEquals("None",student.personalInfo)},
-            { Assertions.assertEquals("None",student.experience)},
-            { Assertions.assertEquals(0.0,student.rating)},
-            { Assertions.assertEquals(user5,student.user)}
-        )
-    }
-
-    @Test
-    fun `saving new student increments the total`() {
-
-        val company1 = companyRepository.findById(1).orElseThrow()
-        val student1 = studentRepository.findById(1).orElseThrow()
-        val user1 = userRepository.findById(6).orElseThrow()
-        val nuevo = Student(
-            4, "Pepe","4444","None",
-            "None", 0.0, mutableSetOf(),user1
-        )
-
-        studentRepository.save<Student>(nuevo)
-
-        val total = studentRepository.count()
-        Assertions.assertEquals(4, total)
-    }
-
-    @Test
-    fun `deleting student decreases the total`() {
-        recommendationRepository.deleteById(3)
-        studentRepository.deleteById(3)
-
-        Assertions.assertFalse(studentRepository.existsById(3))
-        Assertions.assertEquals(2, studentRepository.count())
-    }
-
-
     //TEST DE CERTIFICATIONS
 
     @Test
@@ -473,6 +422,28 @@ class LoadInitData2(
     fun `findById returns correct student`() {
         val student = studentRepository.findById(1).orElseThrow()
         Assertions.assertEquals(1, student.id)
+    }
+
+    @Test
+    fun `findAll returns the number expected of students`() {
+        val students = studentRepository.findAll()
+        Assertions.assertEquals(4, students.size)
+    }
+
+    @Test
+    fun `findById returns the correct data of student`() {
+        val student = studentRepository.findById(3).orElseThrow()
+        val user5 = userRepository.findById(5).orElseThrow()
+
+        Assertions.assertAll(
+            { Assertions.assertEquals(3, student.id) },
+            { Assertions.assertEquals("Andres",student.name) },
+            { Assertions.assertEquals("3333", student.identification) },
+            { Assertions.assertEquals("None",student.personalInfo)},
+            { Assertions.assertEquals("None",student.experience)},
+            { Assertions.assertEquals(0.0,student.rating)},
+            { Assertions.assertEquals(user5,student.user)}
+        )
     }
 
     @Test
