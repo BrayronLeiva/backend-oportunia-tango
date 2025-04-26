@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
+import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import java.util.Date
 
@@ -16,8 +17,13 @@ import java.util.Date
 @Table(name = "users")
 data class User(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
+    @SequenceGenerator(
+        name = "users_seq",
+        sequenceName = "users_id_seq",
+        allocationSize = 1
+    )
+    val id: Long? = null,
     var firstName: String,
     var lastName: String,
     var password: String,

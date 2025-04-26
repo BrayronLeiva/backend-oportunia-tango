@@ -6,14 +6,20 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 
 @Entity
 @Table(name = "recommendations")
 data class Recommendation(
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recommendations_seq")
+    @SequenceGenerator(
+        name = "recommendations_seq",
+        sequenceName = "recommendations_id_seq",
+        allocationSize = 1
+    )
+    val id: Long? = null,
 
     var details: String,
 

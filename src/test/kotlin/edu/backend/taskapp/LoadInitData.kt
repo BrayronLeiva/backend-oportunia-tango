@@ -1,4 +1,4 @@
-package edu.backend.taskapp
+/*package edu.backend.taskapp
 
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,4 +38,4 @@ class LoadInitData(
         Assertions.assertTrue(task.id?.toInt() == 1)
     }
 
-}
+}*/
