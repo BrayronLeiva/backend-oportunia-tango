@@ -22,11 +22,15 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation ("org.mapstruct:mapstruct:1.5.5.Final")
+	kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
+	annotationProcessor ("org.mapstruct:mapstruct:1.5.2.Final")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	kapt("org.springframework.boot:spring-boot-configuration-processor")
 	runtimeOnly("org.postgresql:postgresql")
+
 }
 
 tasks.withType<KotlinCompile> {
