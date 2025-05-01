@@ -11,6 +11,12 @@ data class CertificationCreate(
     val provider: String,
     val studentId: Long
 )
+data class CertificationUptade(
+    var id: Long? = null,
+    val name: String,
+    val provider: String,
+    val studentId: Long
+)
 
 data class CertificationOutput(
     var id: Long? = null,

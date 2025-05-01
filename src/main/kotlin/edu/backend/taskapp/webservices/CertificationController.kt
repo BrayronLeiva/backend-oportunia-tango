@@ -3,6 +3,7 @@ package edu.backend.taskapp.webservices
 import edu.backend.taskapp.dtos.CertificationCreate
 import edu.backend.taskapp.dtos.CertificationInput
 import edu.backend.taskapp.dtos.CertificationOutput
+import edu.backend.taskapp.dtos.CertificationUptade
 import edu.backend.taskapp.services.CertificationService
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -34,8 +35,8 @@ class CertificationController(private val certificationService: CertificationSer
 
     @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun update(@RequestBody certificationInput: CertificationInput) : CertificationOutput? {
-        return certificationService.update(certificationInput)
+    fun update(@RequestBody certificationUptade: CertificationUptade) : CertificationOutput? {
+        return certificationService.update(certificationUptade)
     }
 
     @DeleteMapping("{id}")

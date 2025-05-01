@@ -5,6 +5,10 @@ import edu.backend.taskapp.dtos.QualificationInput
 import edu.backend.taskapp.dtos.QualificationOutput
 import edu.backend.taskapp.mappers.QualificationMapper
 import edu.backend.taskapp.QualificationRepository
+import edu.backend.taskapp.dtos.CertificationOutput
+import edu.backend.taskapp.dtos.CertificationUptade
+import edu.backend.taskapp.dtos.QualificationCreate
+import edu.backend.taskapp.dtos.QualificationUptade
 import edu.backend.taskapp.entities.Qualification
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -31,12 +35,28 @@ interface QualificationService {
      */
     fun create(certificationInput: QualificationInput): QualificationOutput?
 
+
+    /**
+     * Save and flush a Task entity in the database
+     * @param qualificationCreate
+     * @return the user created
+     */
+    fun create(qualificationCreate: QualificationCreate): QualificationOutput?
+
     /**
      * Update a Task entity in the database
      * @param certificationInput the dto input for Task
      * @return the new Task created
      */
     fun update(certificationInput: QualificationInput): QualificationOutput?
+
+
+    /**
+     * Update a Task entity in the database
+     * @param certificationUptade the dto input for Task
+     * @return the new Task created
+     */
+    fun update(certificationUptade: QualificationUptade): QualificationOutput?
 
     /**
      * Delete a Task by id from Database
@@ -72,7 +92,7 @@ class AbstractQualificationService(
     override fun findById(id: Long): QualificationOutput? {
         val qualification: Optional<Qualification> = qualificationRepository.findById(id)
         if (qualification.isEmpty) {
-            throw NoSuchElementException(String.format("The qualificatipm with the id: %s not found!", id))
+            throw NoSuchElementException(String.format("The qualification with the id: %s not found!", id))
         }
         return qualificationMapper.qualificationToQualificationOutput(
             qualification.get(),
@@ -92,6 +112,18 @@ class AbstractQualificationService(
     }
 
     /**
+     * Save and flush a Task entity in the database
+     * @param qualificationInput
+     * @return the user created
+     */
+    override fun create(qualificationCreate: QualificationCreate): QualificationOutput? {
+        val qualification: Qualification = qualificationMapper.qualificationCreateToQualification(qualificationCreate)
+        return qualificationMapper.qualificationToQualificationOutput(
+            qualificationRepository.save(qualification)
+        )
+    }
+
+    /**
      * Update a Task entity in the database
      * @param qualificationInput the dto input for Task
      * @return the new Task created
@@ -100,11 +132,27 @@ class AbstractQualificationService(
     override fun update(qualificationInput: QualificationInput): QualificationOutput? {
         val qualification: Optional<Qualification> = qualificationRepository.findById(qualificationInput.id!!)
         if (qualification.isEmpty) {
-            throw NoSuchElementException(String.format("The qualificatipm with the id: %s not found!", qualificationInput.id))
+            throw NoSuchElementException(String.format("The qualification with the id: %s not found!", qualificationInput.id))
         }
         val qualificationUpdated: Qualification = qualification.get()
         qualificationMapper.qualificationInputToQualification(qualificationInput, qualificationUpdated)
         return qualificationMapper.qualificationToQualificationOutput(qualificationRepository.save(qualificationUpdated))
+    }
+
+    /**
+     * Update a Task entity in the database
+     * @param qualificationInput the dto input for Task
+     * @return the new Task created
+     */
+    @Throws(NoSuchElementException::class)
+    override fun update(qualificationUptade: QualificationUptade): QualificationOutput? {
+        val qualification: Optional<Qualification> = qualificationRepository.findById(qualificationUptade.id!!)
+        if (qualification.isEmpty) {
+            throw NoSuchElementException(String.format("The qualification with the id: %s not found!", qualificationUptade.id))
+        }
+        val qualificationUpdatedResult: Qualification = qualification.get()
+        qualificationMapper.qualificationUptadeToQualification(qualificationUptade, qualificationUpdatedResult)
+        return qualificationMapper.qualificationToQualificationOutput(qualificationRepository.save(qualificationUpdatedResult))
     }
 
     /**
@@ -116,7 +164,7 @@ class AbstractQualificationService(
         if (!qualificationRepository.findById(id).isEmpty) {
             qualificationRepository.deleteById(id)
         } else {
-            throw NoSuchElementException(String.format("The qualificatipm with the id: %s not found!", id))
+            throw NoSuchElementException(String.format("The qualification with the id: %s not found!", id))
         }
     }
 

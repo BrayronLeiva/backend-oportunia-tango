@@ -2,8 +2,10 @@ package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.CertificationInput
 import edu.backend.taskapp.dtos.CertificationOutput
+import edu.backend.taskapp.dtos.QualificationCreate
 import edu.backend.taskapp.dtos.QualificationInput
 import edu.backend.taskapp.dtos.QualificationOutput
+import edu.backend.taskapp.dtos.QualificationUptade
 import edu.backend.taskapp.services.CertificationService
 import edu.backend.taskapp.services.QualificationService
 import org.springframework.http.MediaType
@@ -30,14 +32,14 @@ class QualificationController(private val qualificationService: QualificationSer
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun create(@RequestBody qualificationInput: QualificationInput) : QualificationOutput? {
-        return qualificationService.create(qualificationInput)
+    fun create(@RequestBody qualificationCreate: QualificationCreate) : QualificationOutput? {
+        return qualificationService.create(qualificationCreate)
     }
 
     @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun update(@RequestBody qualificationInput: QualificationInput) : QualificationOutput? {
-        return qualificationService.update(qualificationInput)
+    fun update(@RequestBody qualificationUptade: QualificationUptade) : QualificationOutput? {
+        return qualificationService.update(qualificationUptade)
     }
 
     @DeleteMapping("{id}")

@@ -2,6 +2,7 @@ package edu.backend.taskapp.mappers
 
 import edu.backend.taskapp.dtos.CertificationInput
 import edu.backend.taskapp.dtos.CertificationOutput
+import edu.backend.taskapp.dtos.CertificationUptade
 import edu.backend.taskapp.entities.Certification
 import org.mapstruct.*
 
@@ -25,4 +26,11 @@ interface CertificationMapper {
         dto: CertificationInput,
         @MappingTarget certification: Certification
     )
+    //
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun certificationUpdateToCertification(
+        dto: CertificationUptade,
+        @MappingTarget certification: Certification
+    )
+
 }

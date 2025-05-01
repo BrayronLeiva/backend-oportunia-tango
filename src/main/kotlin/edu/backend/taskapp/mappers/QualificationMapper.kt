@@ -1,8 +1,10 @@
 package edu.backend.taskapp.mappers
 
 
+import edu.backend.taskapp.dtos.QualificationCreate
 import edu.backend.taskapp.dtos.QualificationInput
 import edu.backend.taskapp.dtos.QualificationOutput
+import edu.backend.taskapp.dtos.QualificationUptade
 import edu.backend.taskapp.entities.Qualification
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
@@ -27,4 +29,12 @@ interface QualificationMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun qualificationInputToQualification(dto: QualificationInput, @MappingTarget qualification: Qualification)
+
+    fun qualificationCreateToQualification (
+        qualificationCreate: QualificationCreate
+    ) : Qualification
+
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun qualificationUptadeToQualification(dto: QualificationUptade, @MappingTarget qualification: Qualification)
 }

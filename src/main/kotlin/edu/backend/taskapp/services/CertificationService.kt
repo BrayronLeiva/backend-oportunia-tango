@@ -5,6 +5,7 @@ import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.dtos.CertificationCreate
 import edu.backend.taskapp.dtos.CertificationInput
 import edu.backend.taskapp.dtos.CertificationOutput
+import edu.backend.taskapp.dtos.CertificationUptade
 import edu.backend.taskapp.mappers.CertificationMapper
 import edu.backend.taskapp.entities.Certification
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,6 +47,14 @@ interface CertificationService {
      * @return the new Task created
      */
     fun update(certificationInput: CertificationInput): CertificationOutput?
+
+
+    /**
+     * Update a Task entity in the database
+     * @param certificationInput the dto input for Task
+     * @return the new Task created
+     */
+    fun update(certificationUptade: CertificationUptade): CertificationOutput?
 
     /**
      * Delete a Task by id from Database
@@ -139,6 +148,26 @@ class AbstractCertificationService(
         certificationMapper.certificationInputToCertification(certificationInput, certificationUpdated)
         return certificationMapper.certificationToCertificationOutput(certificationRepository.save(certificationUpdated))
     }
+
+    /**
+     * Update a Task entity in the database
+     * @param certificationInput the dto input for Task
+     * @return the new Task created
+     */
+    @Throws(NoSuchElementException::class)
+    override fun update(certificationUptade: CertificationUptade): CertificationOutput? {
+        val certification: Optional<Certification> = certificationRepository.findById(certificationUptade.id!!)
+        if (certification.isEmpty) {
+            throw NoSuchElementException(String.format("The Certification with the id: %s not found!", certificationUptade.id))
+        }
+
+        val certificationUpdatedResult: Certification = certification.get()
+        certificationMapper.certificationUpdateToCertification(certificationUptade,certificationUpdatedResult)
+
+        return certificationMapper.certificationToCertificationOutput(certificationRepository.save(certificationUpdatedResult))
+    }
+
+
 
     /**
      * Delete a Task by id from Database
