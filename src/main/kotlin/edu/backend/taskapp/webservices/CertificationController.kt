@@ -1,5 +1,6 @@
 package edu.backend.taskapp.webservices
 
+import edu.backend.taskapp.dtos.CertificationCreate
 import edu.backend.taskapp.dtos.CertificationInput
 import edu.backend.taskapp.dtos.CertificationOutput
 import edu.backend.taskapp.services.CertificationService
@@ -27,8 +28,8 @@ class CertificationController(private val certificationService: CertificationSer
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun create(@RequestBody certificationInput: CertificationInput) : CertificationOutput? {
-        return certificationService.create(certificationInput)
+    fun create(@RequestBody request: CertificationCreate) : CertificationOutput? {
+        return certificationService.createFromRequest(request)
     }
 
     @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])

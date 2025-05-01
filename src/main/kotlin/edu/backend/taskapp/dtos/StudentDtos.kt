@@ -12,7 +12,7 @@ data class StudentInput(
     var qualifications: List<QualificationInput>? = null,
     //var requests: List<Request>? = null,
     //var rating: List<RatingCompanyStudentDto>? = null,
-    var user: User? = null
+    //var user: User? = null
 
 )
 

@@ -1,6 +1,8 @@
 package edu.backend.taskapp.services
 
 import edu.backend.taskapp.CertificationRepository
+import edu.backend.taskapp.StudentRepository
+import edu.backend.taskapp.dtos.CertificationCreate
 import edu.backend.taskapp.dtos.CertificationInput
 import edu.backend.taskapp.dtos.CertificationOutput
 import edu.backend.taskapp.mappers.CertificationMapper
@@ -30,6 +32,14 @@ interface CertificationService {
      */
     fun create(certificationInput: CertificationInput): CertificationOutput?
 
+
+    /**
+     * Save and flush a Task entity in the database
+     * @param certificationInput
+     * @return the user created
+     */
+    fun createFromRequest(request: CertificationCreate): CertificationOutput
+
     /**
      * Update a Task entity in the database
      * @param certificationInput the dto input for Task
@@ -50,6 +60,7 @@ class AbstractCertificationService(
     val certificationRepository: CertificationRepository,
     @Autowired
     val certificationMapper: CertificationMapper,
+    private val studentRepository: StudentRepository,
 ) : CertificationService {
     /**
      * Find all Task
@@ -88,6 +99,30 @@ class AbstractCertificationService(
             certificationRepository.save(certification)
         )
     }
+
+    /**
+     * Save and flush a Task entity in the database
+     * @param request
+     * @return the user created
+     */
+
+    override fun createFromRequest(request: CertificationCreate): CertificationOutput {
+
+        val student = studentRepository.findById(request.studentId)
+            .orElseThrow { IllegalArgumentException("Student not found with ID: ${request.studentId}") }
+
+        val certification = Certification(
+            name = request.name,
+            provider = request.provider,
+            file_path = "",
+            student = student
+        )
+
+        val savedCertification = certificationRepository.save(certification)
+
+        return certificationMapper.certificationToCertificationOutput(savedCertification)
+    }
+
 
     /**
      * Update a Task entity in the database
