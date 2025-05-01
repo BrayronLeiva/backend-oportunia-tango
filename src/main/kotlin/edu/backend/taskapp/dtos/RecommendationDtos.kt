@@ -1,15 +1,15 @@
 package edu.backend.taskapp.dtos
 
-class RecommendationInput {
-    var id: Long? = null
-    var details: String? = null
-    var student: StudentInput? = null
-    //var company: CompanyDto? = null
-}
+data class RecommendationInput (
+    var id: Long? = null,
+    var details: String? = null,
+    var student: StudentInput? = null,
+    var company: CompanyInput? = null
+)
 
-class RecommendationOutput {
-    var id: Long? = null
-    var details: String? = null
-    var student: StudentOutput? = null
-    //var company: CompanyDto? = null
-}
+data class RecommendationOutput (
+    var id: Long,
+    var details: String,
+    var student: StudentOutput,
+    var company: CompanyOutput
+)
