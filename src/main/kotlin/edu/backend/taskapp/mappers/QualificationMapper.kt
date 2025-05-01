@@ -1,8 +1,8 @@
-package edu.backend.taskapp.Mappers
+package edu.backend.taskapp.mappers
 
 
-import edu.backend.taskapp.DTOs.QualificationInput
-import edu.backend.taskapp.DTOs.QualificationOutput
+import edu.backend.taskapp.dtos.QualificationInput
+import edu.backend.taskapp.dtos.QualificationOutput
 import edu.backend.taskapp.entities.Qualification
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper

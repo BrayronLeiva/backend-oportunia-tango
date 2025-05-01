@@ -1,6 +1,8 @@
-package edu.backend.taskapp.Mappers
+package edu.backend.taskapp.mappers
 
-import edu.backend.taskapp.DTOs.QuestionDto
+
+import edu.backend.taskapp.dtos.QuestionInput
+import edu.backend.taskapp.dtos.QuestionOutput
 import edu.backend.taskapp.entities.Question
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
@@ -11,18 +13,18 @@ import org.mapstruct.ReportingPolicy
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface QuestionMapper {
 
-    fun questionToQuestionDto(
+    fun questionToQuestionOutput(
         question: Question
-    ): QuestionDto
+    ): QuestionOutput
 
-    fun questionListToQuestionDtoList(
+    fun questionListToQuestionOutputList(
         questionList: List<Question>
-    ): List<QuestionDto>
+    ): List<QuestionOutput>
 
-    fun questionDtoToQuestion(
-        questionDto: QuestionDto
+    fun questionInputToQuestion(
+        questionInput: QuestionInput
     ): Question
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun questionDtoToQuestion(dto: QuestionDto, @MappingTarget question: Question)
+    fun questionInputToQuestion(dto: QuestionInput, @MappingTarget question: Question)
 }

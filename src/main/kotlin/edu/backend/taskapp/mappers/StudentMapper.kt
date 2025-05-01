@@ -1,6 +1,7 @@
-package edu.backend.taskapp.Mappers
+package edu.backend.taskapp.mappers
 
-import edu.backend.taskapp.DTOs.StudentDto
+import edu.backend.taskapp.dtos.StudentInput
+import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.entities.Student
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
@@ -11,18 +12,18 @@ import org.mapstruct.ReportingPolicy
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface StudentMapper {
 
-    fun studentToStudentDto(
+    fun studentToStudentOutput(
         student: Student
-    ): StudentDto
+    ): StudentOutput
 
-    fun studentListToStudentDtoList(
+    fun studentListToStudentOutputList(
         studentList: List<Student>
-    ): List<StudentDto>
+    ): List<StudentOutput>
 
-    fun studentDtoToStudent(
-        studentDto: StudentDto
+    fun studentInputToStudent(
+        studentInput: StudentInput
     ): Student
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun studentDtoToStudent(dto: StudentDto, @MappingTarget student: Student)
+    fun studentInputToStudent(dto: StudentInput, @MappingTarget student: Student)
 }

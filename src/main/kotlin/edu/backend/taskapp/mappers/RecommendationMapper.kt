@@ -1,6 +1,8 @@
-package edu.backend.taskapp.Mappers
+package edu.backend.taskapp.mappers
 
-import edu.backend.taskapp.DTOs.RecommendationDto
+
+import edu.backend.taskapp.dtos.RecommendationInput
+import edu.backend.taskapp.dtos.RecommendationOutput
 import edu.backend.taskapp.entities.Recommendation
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
@@ -11,18 +13,18 @@ import org.mapstruct.ReportingPolicy
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface RecommendationMapper {
 
-    fun recommendationToRecommendationDto(
+    fun recommendationToRecommendationOutput(
         recommendation: Recommendation
-    ): RecommendationDto
+    ): RecommendationOutput
 
-    fun recommendationListToRecommendationDtoList(
+    fun recommendationListToRecommendationOutputList(
         recommendationList: List<Recommendation>
-    ): List<RecommendationDto>
+    ): List<RecommendationOutput>
 
-    fun recommendationDtoToRecommendation(
-        recommendationDto: RecommendationDto
+    fun recommendationInputToRecommendation(
+        recommendationInput: RecommendationInput
     ): Recommendation
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun recommendationDtoToRecommendation(dto: RecommendationDto, @MappingTarget recommendation: Recommendation)
+    fun recommendationInputToRecommendation(dto: RecommendationInput, @MappingTarget recommendation: Recommendation)
 }

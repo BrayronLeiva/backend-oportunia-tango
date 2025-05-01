@@ -1,9 +1,9 @@
-package edu.backend.taskapp.Services
+package edu.backend.taskapp.services
 
 import edu.backend.taskapp.CertificationRepository
-import edu.backend.taskapp.DTOs.CertificationInput
-import edu.backend.taskapp.DTOs.CertificationOutput
-import edu.backend.taskapp.Mappers.CertificationMapper
+import edu.backend.taskapp.dtos.CertificationInput
+import edu.backend.taskapp.dtos.CertificationOutput
+import edu.backend.taskapp.mappers.CertificationMapper
 import edu.backend.taskapp.entities.Certification
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

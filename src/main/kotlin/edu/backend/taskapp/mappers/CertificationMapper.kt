@@ -1,7 +1,7 @@
-package edu.backend.taskapp.Mappers
+package edu.backend.taskapp.mappers
 
-import edu.backend.taskapp.DTOs.CertificationInput
-import edu.backend.taskapp.DTOs.CertificationOutput
+import edu.backend.taskapp.dtos.CertificationInput
+import edu.backend.taskapp.dtos.CertificationOutput
 import edu.backend.taskapp.entities.Certification
 import org.mapstruct.*
 

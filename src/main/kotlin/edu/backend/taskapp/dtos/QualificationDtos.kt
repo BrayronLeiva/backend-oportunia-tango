@@ -1,6 +1,4 @@
-package edu.backend.taskapp.DTOs
-
-import jakarta.persistence.Id
+package edu.backend.taskapp.dtos
 
 data class QualificationInput(
     var id: Long? = null,
