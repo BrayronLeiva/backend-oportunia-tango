@@ -1,25 +1,30 @@
 package edu.backend.taskapp.Mappers
 
-import edu.backend.taskapp.DTOs.QualificationDto
+
+import edu.backend.taskapp.DTOs.QualificationInput
+import edu.backend.taskapp.DTOs.QualificationOutput
 import edu.backend.taskapp.entities.Qualification
 import org.mapstruct.BeanMapping
+import org.mapstruct.Mapper
 import org.mapstruct.MappingTarget
 import org.mapstruct.NullValuePropertyMappingStrategy
+import org.mapstruct.ReportingPolicy
 
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface QualificationMapper {
-    fun qualificationToQualificationDto(
+    fun qualificationToQualificationOutput(
         qualification: Qualification
-    ) : QualificationDto
+    ) : QualificationOutput
 
-    fun qualificationListToQualificationDtoList(
+    fun qualificationListToQualificationOutputList(
         qualificationList: List<Qualification>
-    ) : List<QualificationDto>
+    ) : List<QualificationOutput>
 
 
-    fun qualificationDtoToQualification (
-        qualificationDto: QualificationDto
+    fun qualificationInputToQualification (
+        qualificationInput: QualificationInput
     ) : Qualification
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun qualificationDtoToQualification(dto: QualificationDto, @MappingTarget qualification: Qualification)
+    fun qualificationInputToQualification(dto: QualificationInput, @MappingTarget qualification: Qualification)
 }

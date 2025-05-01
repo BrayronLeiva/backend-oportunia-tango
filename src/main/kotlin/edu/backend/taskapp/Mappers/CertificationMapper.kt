@@ -1,23 +1,28 @@
 package edu.backend.taskapp.Mappers
-import edu.backend.taskapp.DTOs.CertificationDto
+
+import edu.backend.taskapp.DTOs.CertificationInput
+import edu.backend.taskapp.DTOs.CertificationOutput
 import edu.backend.taskapp.entities.Certification
 import org.mapstruct.*
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface CertificationMapper {
-    fun certificationToCertificationDto(
+    fun certificationToCertificationOutput(
         certification: Certification
-    ) : CertificationDto
+    ) : CertificationOutput
 
-    fun certificationListToCertificationDtoList(
+    fun certificationListToCertificationOutputList(
         certificationList: List<Certification>
-    ) : List<CertificationDto>
+    ) : List<CertificationOutput>
 
 
-    fun taskInputToTask (
-        certificationDto: CertificationDto
+    fun certificationInputToCertification (
+        certificationInput: CertificationInput
     ) : Certification
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun certificationDtoToCertification(dto: CertificationDto, @MappingTarget certification: Certification)
+    fun certificationInputToCertification(
+        dto: CertificationInput,
+        @MappingTarget certification: Certification
+    )
 }
