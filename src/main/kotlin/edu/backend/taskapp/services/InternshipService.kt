@@ -1,0 +1,67 @@
+package edu.backend.taskapp.services
+
+import edu.backend.taskapp.InternshipRepository
+import edu.backend.taskapp.dtos.InternshipInput
+import edu.backend.taskapp.dtos.InternshipOutput
+import edu.backend.taskapp.mappers.InternshipMapper
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import java.util.*
+
+interface InternshipService {
+    fun findAll(): List<InternshipOutput>?
+    fun findById(id: Long): InternshipOutput?
+    fun create(internshipInput: InternshipInput): InternshipOutput?
+    fun update(internshipInput: InternshipInput): InternshipOutput?
+    fun deleteById(id: Long)
+}
+
+@Service
+class AbstractInternshipService(
+    @Autowired
+    val internshipRepository: InternshipRepository,
+    @Autowired
+    val internshipMapper: InternshipMapper,
+) : InternshipService {
+
+    override fun findAll(): List<InternshipOutput>? {
+        return internshipMapper.internshipListToInternshipOutputList(
+            internshipRepository.findAll()
+        )
+    }
+
+    override fun findById(id: Long): InternshipOutput? {
+        val internship = internshipRepository.findById(id)
+        if (internship.isEmpty) {
+            throw NoSuchElementException("The internship with the id: $id not found!")
+        }
+        return internshipMapper.internshipToInternshipOutput(internship.get())
+    }
+
+    override fun create(internshipInput: InternshipInput): InternshipOutput? {
+        val internship = internshipMapper.internshipInputToInternship(internshipInput)
+        return internshipMapper.internshipToInternshipOutput(
+            internshipRepository.save(internship)
+        )
+    }
+
+    override fun update(internshipInput: InternshipInput): InternshipOutput? {
+        val internship = internshipRepository.findById(internshipInput.id!!)
+        if (internship.isEmpty) {
+            throw NoSuchElementException("The internship with the id: ${internshipInput.id} not found!")
+        }
+        val updated = internship.get()
+        internshipMapper.internshipInputToInternship(internshipInput, updated)
+        return internshipMapper.internshipToInternshipOutput(
+            internshipRepository.save(updated)
+        )
+    }
+
+    override fun deleteById(id: Long) {
+        if (!internshipRepository.findById(id).isEmpty) {
+            internshipRepository.deleteById(id)
+        } else {
+            throw NoSuchElementException("The internship with the id: $id not found!")
+        }
+    }
+}
