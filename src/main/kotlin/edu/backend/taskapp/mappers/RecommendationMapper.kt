@@ -1,8 +1,10 @@
 package edu.backend.taskapp.mappers
 
 
+import edu.backend.taskapp.dtos.RecommendationCreate
 import edu.backend.taskapp.dtos.RecommendationInput
 import edu.backend.taskapp.dtos.RecommendationOutput
+import edu.backend.taskapp.dtos.RecommendationUpdate
 import edu.backend.taskapp.entities.Recommendation
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
@@ -27,4 +29,13 @@ interface RecommendationMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun recommendationInputToRecommendation(dto: RecommendationInput, @MappingTarget recommendation: Recommendation)
+
+    //@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun recommendationCreateToRecommendation(
+        recommendationCreate: RecommendationCreate
+    ): Recommendation
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun recommendationUptadeToRecommendation(dto: RecommendationUpdate, @MappingTarget recommendation: Recommendation)
+
 }

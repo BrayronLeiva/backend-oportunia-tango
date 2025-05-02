@@ -2,8 +2,10 @@ package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.QuestionInput
 import edu.backend.taskapp.dtos.QuestionOutput
+import edu.backend.taskapp.dtos.RecommendationCreate
 import edu.backend.taskapp.dtos.RecommendationInput
 import edu.backend.taskapp.dtos.RecommendationOutput
+import edu.backend.taskapp.dtos.RecommendationUpdate
 import edu.backend.taskapp.services.QuestionService
 import edu.backend.taskapp.services.RecommendationService
 import org.springframework.http.MediaType
@@ -30,14 +32,14 @@ class RecommendationController(private val recommendationService: Recommendation
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun create(@RequestBody recommendationInput: RecommendationInput) : RecommendationOutput? {
-        return recommendationService.create(recommendationInput)
+    fun create(@RequestBody recommendationCreate: RecommendationCreate) : RecommendationOutput? {
+        return recommendationService.create(recommendationCreate)
     }
 
     @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun update(@RequestBody recommendationInput: RecommendationInput) : RecommendationOutput? {
-        return recommendationService.update(recommendationInput)
+    fun update(@RequestBody recommendationUpdate: RecommendationUpdate) : RecommendationOutput? {
+        return recommendationService.update(recommendationUpdate)
     }
 
     @DeleteMapping("{id}")

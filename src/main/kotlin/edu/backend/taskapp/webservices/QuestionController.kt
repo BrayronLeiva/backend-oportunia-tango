@@ -2,8 +2,10 @@ package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.QualificationInput
 import edu.backend.taskapp.dtos.QualificationOutput
+import edu.backend.taskapp.dtos.QuestionCreate
 import edu.backend.taskapp.dtos.QuestionInput
 import edu.backend.taskapp.dtos.QuestionOutput
+import edu.backend.taskapp.dtos.QuestionUpdate
 import edu.backend.taskapp.services.QualificationService
 import edu.backend.taskapp.services.QuestionService
 import org.springframework.http.MediaType
@@ -30,14 +32,14 @@ class QuestionController(private val questionService: QuestionService) {
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun create(@RequestBody questionInput: QuestionInput) : QuestionOutput? {
-        return questionService.create(questionInput)
+    fun create(@RequestBody questionCreate: QuestionCreate) : QuestionOutput? {
+        return questionService.create(questionCreate)
     }
 
     @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun update(@RequestBody questionInput: QuestionInput) : QuestionOutput? {
-        return questionService.update(questionInput)
+    fun update(@RequestBody questionUpdate: QuestionUpdate) : QuestionOutput? {
+        return questionService.update(questionUpdate)
     }
 
     @DeleteMapping("{id}")

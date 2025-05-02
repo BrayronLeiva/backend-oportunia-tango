@@ -12,3 +12,16 @@ data class QuestionInput(
     var answer: String? = null,
     //var company : CompanyDto? = null
 )
+
+data class QuestionCreate(
+    var question: String? = null,
+    var answer: String? = null,
+    var companyId : Long
+)
+
+data class QuestionUpdate(
+    var id: Long? = null,
+    var question: String? = null,
+    var answer: String? = null,
+    //var company : CompanyDto? = null
+)

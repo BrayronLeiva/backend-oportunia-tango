@@ -1,8 +1,10 @@
 package edu.backend.taskapp.mappers
 
 
+import edu.backend.taskapp.dtos.QuestionCreate
 import edu.backend.taskapp.dtos.QuestionInput
 import edu.backend.taskapp.dtos.QuestionOutput
+import edu.backend.taskapp.dtos.QuestionUpdate
 import edu.backend.taskapp.entities.Question
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
@@ -27,4 +29,12 @@ interface QuestionMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun questionInputToQuestion(dto: QuestionInput, @MappingTarget question: Question)
+
+    fun questionCreateToQuestion(
+        questionCreate: QuestionCreate
+    ): Question
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun questionUpdateToQuestion(dto: QuestionUpdate, @MappingTarget question: Question)
+
 }
