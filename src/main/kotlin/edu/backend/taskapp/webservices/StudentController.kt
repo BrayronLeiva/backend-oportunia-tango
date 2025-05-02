@@ -2,8 +2,10 @@ package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.RecommendationInput
 import edu.backend.taskapp.dtos.RecommendationOutput
+import edu.backend.taskapp.dtos.StudentCreate
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
+import edu.backend.taskapp.dtos.StudentUpdate
 import edu.backend.taskapp.services.RecommendationService
 import edu.backend.taskapp.services.StudentService
 import org.springframework.http.MediaType
@@ -31,14 +33,14 @@ class StudentController(private val studentService: StudentService) {
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun create(@RequestBody studentInput: StudentInput) : StudentOutput? {
-        return studentService.create(studentInput)
+    fun create(@RequestBody studentCreate: StudentCreate) : StudentOutput? {
+        return studentService.create(studentCreate)
     }
 
     @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun update(@RequestBody studentInput: StudentInput) : StudentOutput? {
-        return studentService.update(studentInput)
+    fun update(@RequestBody studentUpdate: StudentUpdate) : StudentOutput? {
+        return studentService.update(studentUpdate)
     }
 
     @DeleteMapping("{id}")

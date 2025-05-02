@@ -4,6 +4,9 @@ import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.mappers.StudentMapper
 import edu.backend.taskapp.StudentRepository
+import edu.backend.taskapp.UserRepository
+import edu.backend.taskapp.dtos.StudentCreate
+import edu.backend.taskapp.dtos.StudentUpdate
 import edu.backend.taskapp.entities.Student
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -31,12 +34,26 @@ interface StudentService {
     fun create(studentInput: StudentInput): StudentOutput?
 
     /**
+     * Save and flush a Task entity in the database
+     * @param studentCreate
+     * @return the user created
+     */
+    fun create(studentCreate: StudentCreate): StudentOutput?
+
+    /**
      * Update a Task entity in the database
      * @param studentInput the dto input for Task
      * @return the new Task created
      */
     fun update(studentInput: StudentInput): StudentOutput?
 
+
+    /**
+     * Update a Task entity in the database
+     * @param studentUpdate the dto input for Task
+     * @return the new Task created
+     */
+    fun update(studentUpdate: StudentUpdate): StudentOutput?
     /**
      * Delete a Task by id from Database
      * @param id of the Task
@@ -48,6 +65,8 @@ interface StudentService {
 class AbstractStudentService(
     @Autowired
     val studentRepository: StudentRepository,
+    @Autowired
+    val userRepository: UserRepository,
     @Autowired
     val studentMapper: StudentMapper,
 
@@ -91,6 +110,21 @@ class AbstractStudentService(
     }
 
     /**
+     * Save and flush a Task entity in the database
+     * @param studentCreate
+     * @return the user created
+     */
+    override fun create(studentCreate: StudentCreate): StudentOutput? {
+        val student: Student = studentMapper.studentCreateToStudent(studentCreate)
+        val user = userRepository.findById(studentCreate.userId)
+            .orElseThrow { IllegalArgumentException("User not found with ID: ${studentCreate.userId}") }
+        student.user = user
+        return studentMapper.studentToStudentOutput(
+            studentRepository.save(student)
+        )
+    }
+
+    /**
      * Update a Task entity in the database
      * @param studentInput the dto input for Task
      * @return the new Task created
@@ -104,6 +138,23 @@ class AbstractStudentService(
         val studentUpdated: Student = student.get()
         studentMapper.studentInputToStudent(studentInput, studentUpdated)
         return studentMapper.studentToStudentOutput(studentRepository.save(studentUpdated))
+    }
+
+
+    /**
+     * Update a Task entity in the database
+     * @param studentInput the dto input for Task
+     * @return the new Task created
+     */
+    @Throws(NoSuchElementException::class)
+    override fun update(studentUpdate: StudentUpdate): StudentOutput? {
+        val student: Optional<Student> = studentRepository.findById(studentUpdate.id!!)
+        if (student.isEmpty) {
+            throw NoSuchElementException(String.format("The student with the id: %s not found!", studentUpdate.id))
+        }
+        val studentUpdatedResult: Student = student.get()
+        studentMapper.studentUpdateToStudent(studentUpdate, studentUpdatedResult)
+        return studentMapper.studentToStudentOutput(studentRepository.save(studentUpdatedResult))
     }
 
     /**

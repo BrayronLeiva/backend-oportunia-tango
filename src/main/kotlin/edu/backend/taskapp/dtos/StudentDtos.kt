@@ -26,6 +26,30 @@ data class StudentOutput(
     var qualifications: List<QualificationOutput>? = null,
     //var requests: List<Request>? = null,
     //var rating: List<RatingCompanyStudentDto>? = null,
+)
+
+data class StudentCreate(
+    //var id: Long? = null,
+    var name: String? = null,
+    var identification: String? = null,
+    var personalInfo: String? = null,
+    var experience: String? = null,
+    var rating: Double? = null,
+    var qualifications: List<QualificationInput>? = null,
+    var userId: Long
+)
+
+
+data class StudentUpdate(
+    var id: Long? = null,
+    var name: String? = null,
+    var identification: String? = null,
+    var personalInfo: String? = null,
+    var experience: String? = null,
+    var rating: Double? = null,
+    var qualifications: List<QualificationInput>? = null,
+    var userId: Long
+
 
 )
 

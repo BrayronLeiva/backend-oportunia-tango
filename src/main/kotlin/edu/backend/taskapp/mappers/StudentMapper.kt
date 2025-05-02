@@ -1,7 +1,9 @@
 package edu.backend.taskapp.mappers
 
+import edu.backend.taskapp.dtos.StudentCreate
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
+import edu.backend.taskapp.dtos.StudentUpdate
 import edu.backend.taskapp.entities.Student
 import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
@@ -26,4 +28,11 @@ interface StudentMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun studentInputToStudent(dto: StudentInput, @MappingTarget student: Student)
+
+    fun studentCreateToStudent(
+        studentCreate: StudentCreate
+    ): Student
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun studentUpdateToStudent(dto: StudentUpdate, @MappingTarget student: Student)
 }
