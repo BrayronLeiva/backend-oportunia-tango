@@ -31,7 +31,7 @@ data class UserInput(
     var password: String?=null,
     var enabled: Boolean?=null,
     var createDate: Date?= Date(),
-    var roles: List<RoleDetails>?=emptyList(),
+    var roleList: Set<RoleDetails>?=emptySet(),
 )
 
 data class UserOutput(
@@ -43,5 +43,5 @@ data class UserOutput(
     var enabled: Boolean?,
     var tokenExpired: Boolean?,
     var createDate: Date,
-    var roles: List<RoleDetails>?,
+    var roleList: Set<RoleDetails>?,
 )
