@@ -47,9 +47,6 @@ data class StudentUpdate(
     var personalInfo: String? = null,
     var experience: String? = null,
     var rating: Double? = null,
-    var qualifications: List<QualificationInput>? = null,
-    var userId: Long
-
-
+    var qualifications: List<QualificationInput>? = null
 )
 

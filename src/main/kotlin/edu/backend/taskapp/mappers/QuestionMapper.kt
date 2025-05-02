@@ -30,6 +30,7 @@ interface QuestionMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun questionInputToQuestion(dto: QuestionInput, @MappingTarget question: Question)
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun questionCreateToQuestion(
         questionCreate: QuestionCreate
     ): Question

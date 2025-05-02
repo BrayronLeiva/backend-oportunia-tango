@@ -30,7 +30,7 @@ interface RecommendationMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun recommendationInputToRecommendation(dto: RecommendationInput, @MappingTarget recommendation: Recommendation)
 
-    //@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun recommendationCreateToRecommendation(
         recommendationCreate: RecommendationCreate
     ): Recommendation

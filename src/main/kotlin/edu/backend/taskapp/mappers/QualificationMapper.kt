@@ -30,6 +30,7 @@ interface QualificationMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun qualificationInputToQualification(dto: QualificationInput, @MappingTarget qualification: Qualification)
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun qualificationCreateToQualification (
         qualificationCreate: QualificationCreate
     ) : Qualification

@@ -29,6 +29,7 @@ interface StudentMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun studentInputToStudent(dto: StudentInput, @MappingTarget student: Student)
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun studentCreateToStudent(
         studentCreate: StudentCreate
     ): Student
