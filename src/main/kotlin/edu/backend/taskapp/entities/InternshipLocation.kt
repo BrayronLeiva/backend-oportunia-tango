@@ -12,30 +12,31 @@ data class InternshipLocation(
         sequenceName = "internshiplocation_id_seq",
         allocationSize = 1
     )
-    val id: Long? = null,
+    @Column(name = "id_internship_location")
+    val idInternshipLocation: Long? = null,
 
     @ManyToOne
-    @JoinColumn(name = "location_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "location_id", nullable = false, referencedColumnName = "id_location_company")
     var locationCompany: LocationCompany,
 
     @ManyToOne
-    @JoinColumn(name = "internship_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "internship_id", nullable = false, referencedColumnName = "id_internship")
     var internship: Internship,
 
-    @OneToMany(mappedBy = "internshipLocations", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "internshipLocation", cascade = [CascadeType.ALL], orphanRemoval = true)
     var requests: List<Request> = mutableListOf()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is InternshipLocation) return false
-        return id == other.id
+        return idInternshipLocation == other.idInternshipLocation
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return idInternshipLocation?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "InternshipLocation(id=$id)"
+        return "InternshipLocation(idInternshipLocation=$idInternshipLocation)"
     }
 }

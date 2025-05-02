@@ -96,9 +96,9 @@ class AbstractCertificationService(
      */
     @Throws(NoSuchElementException::class)
     override fun update(certificationInput: CertificationInput): CertificationOutput? {
-        val certification: Optional<Certification> = certificationRepository.findById(certificationInput.id!!)
+        val certification: Optional<Certification> = certificationRepository.findById(certificationInput.idCertification!!)
         if (certification.isEmpty) {
-            throw NoSuchElementException(String.format("The Certification with the id: %s not found!", certificationInput.id))
+            throw NoSuchElementException(String.format("The Certification with the id: %s not found!", certificationInput.idCertification))
         }
         val certificationUpdated: Certification = certification.get()
         certificationMapper.certificationInputToCertification(certificationInput, certificationUpdated)

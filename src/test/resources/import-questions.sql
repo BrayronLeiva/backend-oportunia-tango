@@ -1,5 +1,5 @@
 ALTER SEQUENCE questions_id_seq RESTART WITH 1;
-ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('questions_id_seq');
+ALTER TABLE questions ALTER COLUMN id_question SET DEFAULT nextval('questions_id_seq');
 INSERT INTO public.questions (question,answer,company_id) VALUES
             ('Do you offer night shifts?', 'Yes, just choose the timezone in preferences.', 1),
             ('Are internships paid?', 'Yes, all our internships include a stipend.', 1),

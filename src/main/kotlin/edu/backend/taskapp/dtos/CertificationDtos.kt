@@ -1,16 +1,14 @@
 package edu.backend.taskapp.dtos
 
 data class CertificationInput(
-    var id: Long? = null,
-    var name: String? = null,
+    var idCertification: Long? = null,
+    var nameCertification: String? = null,
     var provider: String? = null,
-    var student: StudentInput? = null
+    var studentId: Long? = null
 )
-
-
 data class CertificationOutput(
-    var id: Long,
-    var name: String,
+    var idCertification: Long,
+    var nameCertification: String,
     var provider: String,
     var student: StudentOutput
 )

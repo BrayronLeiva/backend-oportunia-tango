@@ -1,13 +1,6 @@
 package edu.backend.taskapp.entities
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.SequenceGenerator
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "certifications")
@@ -19,38 +12,31 @@ data class Certification(
         sequenceName = "certifications_id_seq",
         allocationSize = 1
     )
-    var id: Long? = null,
+    @Column(name = "id_certification")
+    val idCertification: Long? = null,
 
-    var name: String,
+    @Column(name = "name_certification")
+    var nameCertification: String,
 
-    val provider: String,
+    var provider: String,
 
     var file_path: String,
 
-    // Entity Relationship
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id_student")
     var student: Student
-
-
 
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Certification) return false
-
-        if (id != other.id) return false
-
+        if (idCertification != other.idCertification) return false
         return true
     }
 
-    override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
-    }
+    override fun hashCode(): Int = idCertification?.hashCode() ?: 0
 
     override fun toString(): String {
-        return "Certification(id=$id, name='$name', provider='$provider', student=$student)"
+        return "Certification(idCertification=$idCertification, nameCertification='$nameCertification', provider='$provider', student=$student)"
     }
-
-
 }

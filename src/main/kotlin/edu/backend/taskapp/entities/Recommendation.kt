@@ -1,5 +1,6 @@
 package edu.backend.taskapp.entities
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -19,18 +20,19 @@ data class Recommendation(
         sequenceName = "recommendations_id_seq",
         allocationSize = 1
     )
-    val id: Long? = null,
+    @Column(name = "id_recommendation")
+    val idRecommendation: Long? = null,
 
     var details: String,
 
 
     // Entity Relationship
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id_student")
     var student: Student,
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id_company")
     var company: Company,
 
 
@@ -39,17 +41,17 @@ data class Recommendation(
         if (this === other) return true
         if (other !is Recommendation) return false
 
-        if (id != other.id) return false
+        if (idRecommendation != other.idRecommendation) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return idRecommendation?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "Recommendation(id=$id, details='$details', student=$student)"
+        return "Recommendation(idRecommendation=$idRecommendation, details='$details', student=$student)"
     }
 
 

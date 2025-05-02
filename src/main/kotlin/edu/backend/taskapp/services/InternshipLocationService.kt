@@ -4,6 +4,8 @@ import edu.backend.taskapp.dtos.InternshipLocationInput
 import edu.backend.taskapp.dtos.InternshipLocationOutput
 import edu.backend.taskapp.mappers.InternshipLocationMapper
 import edu.backend.taskapp.InternshipLocationRepository
+import edu.backend.taskapp.InternshipRepository
+import edu.backend.taskapp.LocationCompanyRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -18,6 +20,10 @@ interface InternshipLocationService {
 
 @Service
 class AbstractInternshipLocationService(
+    @Autowired
+    val internshipRepository: InternshipRepository,
+    @Autowired
+    val locationCompanyRepository: LocationCompanyRepository,
     @Autowired
     val internshipLocationRepository: InternshipLocationRepository,
     @Autowired
@@ -39,16 +45,29 @@ class AbstractInternshipLocationService(
     }
 
     override fun create(internshipLocationInput: InternshipLocationInput): InternshipLocationOutput? {
-        val entity = internshipLocationMapper.internshipLocationInputToInternshipLocation(internshipLocationInput)
+        val internship = internshipRepository.findById(internshipLocationInput.internshipId!!)
+            .orElseThrow { NoSuchElementException("Internship with ID ${internshipLocationInput.internshipId} not found") }
+
+        val locationCompany = locationCompanyRepository.findById(internshipLocationInput.locationCompanyId!!)
+            .orElseThrow { NoSuchElementException("LocationCompany with ID ${internshipLocationInput.locationCompanyId} not found") }
+
+        val entity = internshipLocationMapper.internshipLocationInputToInternshipLocation(
+            internshipLocationInput,
+            locationCompany,
+            internship
+        )
+        entity.internship = internship
+        entity.locationCompany = locationCompany
+
         return internshipLocationMapper.internshipLocationToInternshipLocationOutput(
             internshipLocationRepository.save(entity)
         )
     }
 
     override fun update(internshipLocationInput: InternshipLocationInput): InternshipLocationOutput? {
-        val existing = internshipLocationRepository.findById(internshipLocationInput.id!!)
+        val existing = internshipLocationRepository.findById(internshipLocationInput.idInternshipLocation!!)
         if (existing.isEmpty) {
-            throw NoSuchElementException("The internship location with the id: ${internshipLocationInput.id} not found!")
+            throw NoSuchElementException("The internship location with the id: ${internshipLocationInput.idInternshipLocation} not found!")
         }
         val entity = existing.get()
         internshipLocationMapper.internshipLocationInputToInternshipLocation(internshipLocationInput, entity)

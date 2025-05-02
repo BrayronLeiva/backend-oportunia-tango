@@ -12,7 +12,8 @@ data class Internship(
         sequenceName = "internships_id_seq",
         allocationSize = 1
     )
-    val id: Long? = null,
+    @Column(name = "id_internship")
+    val idInternship: Long? = null,
 
     var details: String,
 
@@ -22,14 +23,14 @@ data class Internship(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Internship) return false
-        return id == other.id
+        return idInternship == other.idInternship
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return idInternship?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "Internship(id=$id, details='$details')"
+        return "Internship(idInternship=$idInternship, details='$details')"
     }
 }

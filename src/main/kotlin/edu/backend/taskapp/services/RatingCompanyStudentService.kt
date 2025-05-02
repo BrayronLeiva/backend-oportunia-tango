@@ -1,9 +1,11 @@
 package edu.backend.taskapp.services
 
+import edu.backend.taskapp.CompanyRepository
 import edu.backend.taskapp.dtos.RatingCompanyStudentInput
 import edu.backend.taskapp.dtos.RatingCompanyStudentOutput
 import edu.backend.taskapp.mappers.RatingCompanyStudentMapper
 import edu.backend.taskapp.RatingCompanyStudentRepository
+import edu.backend.taskapp.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -18,6 +20,10 @@ interface RatingCompanyStudentService {
 
 @Service
 class AbstractRatingCompanyStudentService(
+    @Autowired
+    val studentRepository: StudentRepository,
+    @Autowired
+    val companyRepository: CompanyRepository,
     @Autowired
     val ratingCompanyStudentRepository: RatingCompanyStudentRepository,
     @Autowired
@@ -39,16 +45,29 @@ class AbstractRatingCompanyStudentService(
     }
 
     override fun create(ratingCompanyStudentInput: RatingCompanyStudentInput): RatingCompanyStudentOutput? {
-        val ratingCompanyStudent = ratingCompanyStudentMapper.ratingCompanyStudentInputToRatingCompanyStudent(ratingCompanyStudentInput)
+        val student = studentRepository.findById(ratingCompanyStudentInput.studentId!!)
+            .orElseThrow { NoSuchElementException("Student with ID ${ratingCompanyStudentInput.studentId} not found") }
+
+        val company = companyRepository.findById(ratingCompanyStudentInput.companyId!!)
+            .orElseThrow { NoSuchElementException("Company with ID ${ratingCompanyStudentInput.companyId} not found") }
+
+        val ratingCompanyStudent = ratingCompanyStudentMapper.ratingCompanyStudentInputToRatingCompanyStudent(
+            ratingCompanyStudentInput,
+            student,
+            company
+        )
+        ratingCompanyStudent.student = student
+        ratingCompanyStudent.company = company
+
         return ratingCompanyStudentMapper.ratingCompanyStudentToRatingCompanyStudentOutput(
             ratingCompanyStudentRepository.save(ratingCompanyStudent)
         )
     }
 
     override fun update(ratingCompanyStudentInput: RatingCompanyStudentInput): RatingCompanyStudentOutput? {
-        val ratingCompanyStudent = ratingCompanyStudentRepository.findById(ratingCompanyStudentInput.id!!)
+        val ratingCompanyStudent = ratingCompanyStudentRepository.findById(ratingCompanyStudentInput.idRating!!)
         if (ratingCompanyStudent.isEmpty) {
-            throw NoSuchElementException("The rating company student with the id: ${ratingCompanyStudentInput.id} not found!")
+            throw NoSuchElementException("The rating company student with the id: ${ratingCompanyStudentInput.idRating} not found!")
         }
         val updated = ratingCompanyStudent.get()
         ratingCompanyStudentMapper.ratingCompanyStudentInputToRatingCompanyStudent(ratingCompanyStudentInput, updated)

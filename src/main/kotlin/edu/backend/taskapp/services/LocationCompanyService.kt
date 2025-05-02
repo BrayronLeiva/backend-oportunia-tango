@@ -1,12 +1,12 @@
 package edu.backend.taskapp.services
 
+import edu.backend.taskapp.CompanyRepository
+import edu.backend.taskapp.LocationCompanyRepository
 import edu.backend.taskapp.dtos.LocationCompanyInput
 import edu.backend.taskapp.dtos.LocationCompanyOutput
 import edu.backend.taskapp.mappers.LocationCompanyMapper
-import edu.backend.taskapp.LocationCompanyRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 interface LocationCompanyService {
     fun findAll(): List<LocationCompanyOutput>?
@@ -18,6 +18,8 @@ interface LocationCompanyService {
 
 @Service
 class AbstractLocationCompanyService(
+    @Autowired
+    val companyRepository: CompanyRepository,
     @Autowired
     val locationCompanyRepository: LocationCompanyRepository,
     @Autowired
@@ -39,16 +41,21 @@ class AbstractLocationCompanyService(
     }
 
     override fun create(locationCompanyInput: LocationCompanyInput): LocationCompanyOutput? {
-        val locationCompany = locationCompanyMapper.locationCompanyInputToLocationCompany(locationCompanyInput)
+        val company = companyRepository.findById(locationCompanyInput.companyId!!)
+            .orElseThrow { NoSuchElementException("Company with ID ${locationCompanyInput.companyId} not found") }
+
+        val locationCompany = locationCompanyMapper.locationCompanyInputToLocationCompany(locationCompanyInput, company)
+        locationCompany.company = company
+
         return locationCompanyMapper.locationCompanyToLocationCompanyOutput(
             locationCompanyRepository.save(locationCompany)
         )
     }
 
     override fun update(locationCompanyInput: LocationCompanyInput): LocationCompanyOutput? {
-        val locationCompany = locationCompanyRepository.findById(locationCompanyInput.id!!)
+        val locationCompany = locationCompanyRepository.findById(locationCompanyInput.idLocationCompany!!)
         if (locationCompany.isEmpty) {
-            throw NoSuchElementException("The location company with the id: ${locationCompanyInput.id} not found!")
+            throw NoSuchElementException("The location company with the id: ${locationCompanyInput.idLocationCompany} not found!")
         }
         val updated = locationCompany.get()
         locationCompanyMapper.locationCompanyInputToLocationCompany(locationCompanyInput, updated)

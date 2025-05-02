@@ -1,14 +1,11 @@
 package edu.backend.taskapp.mappers
 
-
 import edu.backend.taskapp.dtos.RecommendationInput
 import edu.backend.taskapp.dtos.RecommendationOutput
+import edu.backend.taskapp.entities.Company
 import edu.backend.taskapp.entities.Recommendation
-import org.mapstruct.BeanMapping
-import org.mapstruct.Mapper
-import org.mapstruct.MappingTarget
-import org.mapstruct.NullValuePropertyMappingStrategy
-import org.mapstruct.ReportingPolicy
+import edu.backend.taskapp.entities.Student
+import org.mapstruct.*
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface RecommendationMapper {
@@ -18,13 +15,29 @@ interface RecommendationMapper {
     ): RecommendationOutput
 
     fun recommendationListToRecommendationOutputList(
-        recommendationList: List<Recommendation>
+        recommendations: List<Recommendation>
     ): List<RecommendationOutput>
 
     fun recommendationInputToRecommendation(
-        recommendationInput: RecommendationInput
+        input: RecommendationInput
     ): Recommendation
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun recommendationInputToRecommendation(dto: RecommendationInput, @MappingTarget recommendation: Recommendation)
+    fun recommendationInputToRecommendation(
+        dto: RecommendationInput,
+        @MappingTarget entity: Recommendation
+    )
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun recommendationInputToRecommendation(
+        dto: RecommendationInput,
+        student: Student,
+        company: Company
+    ): Recommendation {
+        val entity = recommendationInputToRecommendation(dto)
+        return entity.copy(
+            student = student,
+            company = company
+        )
+    }
 }

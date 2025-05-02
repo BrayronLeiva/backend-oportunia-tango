@@ -1,15 +1,6 @@
 package edu.backend.taskapp.entities
 
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
-import jakarta.persistence.SequenceGenerator
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "companies")
@@ -21,9 +12,11 @@ data class Company(
         sequenceName = "companies_id_seq",
         allocationSize = 1
     )
-    val id: Long? = null,
+    @Column(name = "id_company")
+    val idCompany: Long? = null,
 
-    var name: String,
+    @Column(name = "name_company")
+    var nameCompany: String,
 
     var description: String,
 
@@ -33,12 +26,16 @@ data class Company(
 
     var vision: String,
 
+    @Column(name = "corporate_cultur")
     var corporateCultur: String,
 
-    var contact: Int,
+    @Column(name = "contact_company")
+    var contactCompany: Int,
 
-    var rating: Double,
+    @Column(name = "rating_company")
+    var ratingCompany: Double,
 
+    @Column(name = "internship_type")
     var internshipType: String,
 
     @OneToOne
@@ -61,17 +58,12 @@ data class Company(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Company) return false
-
-        if (id != other.id) return false
-
-        return true
+        return idCompany == other.idCompany
     }
 
-    override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
-    }
+    override fun hashCode(): Int = idCompany?.hashCode() ?: 0
 
     override fun toString(): String {
-        return "Company(id=$id, name='$name', description='$description', contact=$contact, rating=$rating)"
+        return "Company(idCompany=$idCompany, nameCompany='$nameCompany', description='$description', contactCompany=$contactCompany, ratingCompany=$ratingCompany)"
     }
 }

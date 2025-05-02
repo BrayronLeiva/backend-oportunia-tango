@@ -46,9 +46,9 @@ class AbstractInternshipService(
     }
 
     override fun update(internshipInput: InternshipInput): InternshipOutput? {
-        val internship = internshipRepository.findById(internshipInput.id!!)
+        val internship = internshipRepository.findById(internshipInput.idInternship!!)
         if (internship.isEmpty) {
-            throw NoSuchElementException("The internship with the id: ${internshipInput.id} not found!")
+            throw NoSuchElementException("The internship with the id: ${internshipInput.idInternship} not found!")
         }
         val updated = internship.get()
         internshipMapper.internshipInputToInternship(internshipInput, updated)

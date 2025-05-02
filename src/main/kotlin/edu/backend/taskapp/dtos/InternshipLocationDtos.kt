@@ -1,15 +1,15 @@
 package edu.backend.taskapp.dtos
 
 data class InternshipLocationInput(
-    var id: Long? = null,
-    var locationCompany: LocationCompanyInput? = null,
-    var internship: InternshipInput? = null,
-    var requests: List<RequestInput>? = null
+    var idInternshipLocation: Long? = null,
+    var locationCompanyId: Long? = null,
+    var internshipId: Long? = null,
+    var requests: List<RequestInput>? = emptyList()
 )
 
 data class InternshipLocationOutput(
-    var id: Long,
+    var idInternshipLocation: Long,
     var locationCompany: LocationCompanyOutput,
     var internship: InternshipOutput,
-    var requests: List<RequestOutput>
+    //var requests: List<RequestOutput>
 )

@@ -1,11 +1,11 @@
 package edu.backend.taskapp.dtos
 
 data class QualificationInput(
-    var id: Long? = null,
-    var name: String? = null
+    var idQualification: Long? = null,
+    var nameQualification: String? = null
 )
 
 data class QualificationOutput(
-    var id: Long? = null,
-    var name: String? = null
+    var idQualification: Long? = null,
+    var nameQualification: String?
 )

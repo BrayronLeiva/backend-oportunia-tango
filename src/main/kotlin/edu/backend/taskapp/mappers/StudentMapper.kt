@@ -2,12 +2,12 @@ package edu.backend.taskapp.mappers
 
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
+import edu.backend.taskapp.entities.Qualification
+import edu.backend.taskapp.entities.RatingCompanyStudent
+import edu.backend.taskapp.entities.Request
 import edu.backend.taskapp.entities.Student
-import org.mapstruct.BeanMapping
-import org.mapstruct.Mapper
-import org.mapstruct.MappingTarget
-import org.mapstruct.NullValuePropertyMappingStrategy
-import org.mapstruct.ReportingPolicy
+import edu.backend.taskapp.entities.User
+import org.mapstruct.*
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface StudentMapper {
@@ -17,13 +17,27 @@ interface StudentMapper {
     ): StudentOutput
 
     fun studentListToStudentOutputList(
-        studentList: List<Student>
+        students: List<Student>
     ): List<StudentOutput>
 
     fun studentInputToStudent(
-        studentInput: StudentInput
+        input: StudentInput
     ): Student
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun studentInputToStudent(dto: StudentInput, @MappingTarget student: Student)
+    fun studentInputToStudent(
+        dto: StudentInput,
+        @MappingTarget entity: Student
+    )
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun studentInputToStudent(
+        dto: StudentInput,
+        user: User,
+    ): Student {
+        val entity = studentInputToStudent(dto)
+        return entity.copy(
+            user = user,
+        )
+    }
 }

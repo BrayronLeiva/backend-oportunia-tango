@@ -12,7 +12,8 @@ data class LocationCompany(
         sequenceName = "locationcompany_id_seq",
         allocationSize = 1
     )
-    val id: Long? = null,
+    @Column(name = "id_location_company")
+    val idLocationCompany: Long? = null,
 
     var latitude: Double,
 
@@ -20,10 +21,11 @@ data class LocationCompany(
 
     var email: String,
 
-    var contact: Int,
+    @Column(name = "contact_location")
+    var contactLocation: Int,
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id_company")
     var company: Company,
 
     @OneToMany(mappedBy = "locationCompany", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -32,15 +34,15 @@ data class LocationCompany(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is LocationCompany) return false
-        if (id != other.id) return false
+        if (idLocationCompany != other.idLocationCompany) return false
         return true
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return idLocationCompany?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "LocationCompany(id=$id, email='$email', latitude=$latitude, longitude=$longitude, contact=$contact)"
+        return "LocationCompany(idLocationCompany=$idLocationCompany, email='$email', latitude=$latitude, longitude=$longitude, contactLocation=$contactLocation)"
     }
 }

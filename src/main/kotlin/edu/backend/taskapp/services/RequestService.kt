@@ -1,9 +1,11 @@
 package edu.backend.taskapp.services
 
+import edu.backend.taskapp.InternshipLocationRepository
 import edu.backend.taskapp.dtos.RequestInput
 import edu.backend.taskapp.dtos.RequestOutput
 import edu.backend.taskapp.mappers.RequestMapper
 import edu.backend.taskapp.RequestRepository
+import edu.backend.taskapp.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -18,6 +20,10 @@ interface RequestService {
 
 @Service
 class AbstractRequestService(
+    @Autowired
+    val studentRepository: StudentRepository,
+    @Autowired
+    val internshipLocationRepository: InternshipLocationRepository,
     @Autowired
     val requestRepository: RequestRepository,
     @Autowired
@@ -39,16 +45,25 @@ class AbstractRequestService(
     }
 
     override fun create(requestInput: RequestInput): RequestOutput? {
-        val request = requestMapper.requestInputToRequest(requestInput)
+        val student = studentRepository.findById(requestInput.studentId!!)
+            .orElseThrow { NoSuchElementException("Student with ID ${requestInput.studentId} not found") }
+
+        val internshipLocation = internshipLocationRepository.findById(requestInput.internshipLocationId!!)
+            .orElseThrow { NoSuchElementException("InternshipLocation with ID ${requestInput.internshipLocationId} not found") }
+
+        val request = requestMapper.requestInputToRequest(requestInput, student, internshipLocation)
+        request.student = student
+        request.internshipLocation = internshipLocation
+
         return requestMapper.requestToRequestOutput(
             requestRepository.save(request)
         )
     }
 
     override fun update(requestInput: RequestInput): RequestOutput? {
-        val request = requestRepository.findById(requestInput.id!!)
+        val request = requestRepository.findById(requestInput.idRequest!!)
         if (request.isEmpty) {
-            throw NoSuchElementException("The request with the id: ${requestInput.id} not found!")
+            throw NoSuchElementException("The request with the id: ${requestInput.idRequest} not found!")
         }
         val updatedRequest = request.get()
         requestMapper.requestInputToRequest(requestInput, updatedRequest)

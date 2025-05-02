@@ -26,17 +26,17 @@ interface QualificationService {
 
     /**
      * Save and flush a Task entity in the database
-     * @param certificationInput
+     * @param qualificationInput
      * @return the user created
      */
-    fun create(certificationInput: QualificationInput): QualificationOutput?
+    fun create(qualificationInput: QualificationInput): QualificationOutput?
 
     /**
      * Update a Task entity in the database
-     * @param certificationInput the dto input for Task
+     * @param qualificationInput the dto input for Task
      * @return the new Task created
      */
-    fun update(certificationInput: QualificationInput): QualificationOutput?
+    fun update(qualificationInput: QualificationInput): QualificationOutput?
 
     /**
      * Delete a Task by id from Database
@@ -98,9 +98,9 @@ class AbstractQualificationService(
      */
     @Throws(NoSuchElementException::class)
     override fun update(qualificationInput: QualificationInput): QualificationOutput? {
-        val qualification: Optional<Qualification> = qualificationRepository.findById(qualificationInput.id!!)
+        val qualification: Optional<Qualification> = qualificationRepository.findById(qualificationInput.idQualification!!)
         if (qualification.isEmpty) {
-            throw NoSuchElementException(String.format("The qualificatipm with the id: %s not found!", qualificationInput.id))
+            throw NoSuchElementException(String.format("The qualificatipm with the id: %s not found!", qualificationInput.idQualification))
         }
         val qualificationUpdated: Qualification = qualification.get()
         qualificationMapper.qualificationInputToQualification(qualificationInput, qualificationUpdated)

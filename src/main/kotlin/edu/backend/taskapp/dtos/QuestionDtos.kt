@@ -1,14 +1,14 @@
 package edu.backend.taskapp.dtos
 
 data class QuestionInput(
-    var id: Long? = null,
+    var idQuestion: Long? = null,
     var question: String? = null,
     var answer: String? = null,
-    var company : CompanyInput? = null
+    var companyId: Long? = null
 )
 
 data class QuestionOutput(
-    var id: Long,
+    var idQuestion: Long,
     var question: String,
     var answer: String,
     var company : CompanyOutput

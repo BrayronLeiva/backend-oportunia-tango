@@ -1,37 +1,37 @@
 package edu.backend.taskapp.dtos
 
 data class CompanyInput(
-    var id: Long? = null,
-    var name: String? = null,
+    var idCompany: Long? = null,
+    var nameCompany: String? = null,
     var description: String? = null,
     var history: String? = null,
     var mision: String? = null,
     var vision: String? = null,
     var corporateCultur: String? = null,
-    var contact: Int? = null,
-    var rating: Double? = null,
+    var contactCompany: Int? = null,
+    var ratingCompany: Double? = null,
     var internshipType: String? = null,
-    var user: UserInput? = null,
-    var locationCompanies: List<LocationCompanyInput>? = null,
-    var ratingCompanyStudents: List<RatingCompanyStudentInput>? = null,
-    var recommendations: List<RecommendationInput>? = null,
-    var questions: List<QuestionInput>? = null
+    var userId: Long? = null,
+    var locationCompanies: List<LocationCompanyInput>? = emptyList(),
+    var ratingCompanyStudents: List<RatingCompanyStudentInput>? = emptyList(),
+    var recommendations: List<RecommendationInput>? = emptyList(),
+    var questions: List<QuestionInput>? = emptyList()
 )
 
 data class CompanyOutput(
-    var id: Long,
-    var name: String,
+    var idCompany: Long,
+    var nameCompany: String,
     var description: String,
     var history: String,
     var mision: String,
     var vision: String,
     var corporateCultur: String,
-    var contact: Int,
-    var rating: Double,
+    var contactCompany: Int,
+    var ratingCompany: Double,
     var internshipType: String,
     var user: UserOutput,
-    var locationCompanies: List<LocationCompanyOutput>,
-    var ratingCompanyStudents: List<RatingCompanyStudentOutput>,
-    var recommendations: List<RecommendationOutput>,
-    var questions: List<QuestionOutput>
+    //var locationCompanies: List<LocationCompanyOutput>,
+    //var ratingCompanyStudents: List<RatingCompanyStudentOutput>,
+    //var recommendations: List<RecommendationOutput>,
+    //var questions: List<QuestionOutput>
 )

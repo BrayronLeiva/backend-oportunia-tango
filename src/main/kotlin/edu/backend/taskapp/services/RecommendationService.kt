@@ -1,9 +1,11 @@
 package edu.backend.taskapp.services
 
+import edu.backend.taskapp.CompanyRepository
 import edu.backend.taskapp.dtos.RecommendationInput
 import edu.backend.taskapp.dtos.RecommendationOutput
 import edu.backend.taskapp.mappers.RecommendationMapper
 import edu.backend.taskapp.RecommendationRepository
+import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.entities.Recommendation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -48,6 +50,10 @@ interface RecommendationService {
 @Service
 class AbstractRecommendationService(
     @Autowired
+    val studentRepository: StudentRepository,
+    @Autowired
+    val companyRepository: CompanyRepository,
+    @Autowired
     val recommendationRepository: RecommendationRepository,
     @Autowired
     val recommendationMapper: RecommendationMapper,
@@ -85,7 +91,16 @@ class AbstractRecommendationService(
      * @return the user created
      */
     override fun create(recommendationInput: RecommendationInput): RecommendationOutput? {
-        val recommendation: Recommendation = recommendationMapper.recommendationInputToRecommendation(recommendationInput)
+        val student = studentRepository.findById(recommendationInput.studentId!!)
+            .orElseThrow { NoSuchElementException("Student with ID ${recommendationInput.studentId} not found") }
+
+        val company = companyRepository.findById(recommendationInput.companyId!!)
+            .orElseThrow { NoSuchElementException("Company with ID ${recommendationInput.companyId} not found") }
+
+        val recommendation = recommendationMapper.recommendationInputToRecommendation(recommendationInput, student, company)
+        recommendation.student = student
+        recommendation.company = company
+
         return recommendationMapper.recommendationToRecommendationOutput(
             recommendationRepository.save(recommendation)
         )
@@ -98,9 +113,9 @@ class AbstractRecommendationService(
      */
     @Throws(NoSuchElementException::class)
     override fun update(recommendationInput: RecommendationInput): RecommendationOutput? {
-        val recommendation: Optional<Recommendation> = recommendationRepository.findById(recommendationInput.id!!)
+        val recommendation: Optional<Recommendation> = recommendationRepository.findById(recommendationInput.idRecommendation!!)
         if (recommendation.isEmpty) {
-            throw NoSuchElementException(String.format("The recommendation with the id: %s not found!", recommendationInput.id))
+            throw NoSuchElementException(String.format("The recommendation with the id: %s not found!", recommendationInput.idRecommendation))
         }
         val recommendationUpdated: Recommendation = recommendation.get()
         recommendationMapper.recommendationInputToRecommendation(recommendationInput, recommendationUpdated)

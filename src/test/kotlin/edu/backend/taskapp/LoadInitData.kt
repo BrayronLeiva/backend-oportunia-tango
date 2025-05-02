@@ -81,10 +81,10 @@ class LoadInitData(
     fun `findById returns the correct certification`() {
         val cert = certificationRepository.findById(1).orElseThrow()
         Assertions.assertAll(
-            { Assertions.assertEquals(1, cert.id) },
-            { Assertions.assertEquals("Java SE 11 Developer", cert.name) },
+            { Assertions.assertEquals(1, cert.idCertification) },
+            { Assertions.assertEquals("Java SE 11 Developer", cert.nameCertification) },
             { Assertions.assertEquals("Oracle", cert.provider) },
-            { Assertions.assertEquals(1, cert.student.id) }
+            { Assertions.assertEquals(1, cert.student.idStudent) }
         )
     }
 
@@ -92,7 +92,7 @@ class LoadInitData(
     fun `saving new certification increments the total`() {
         val student1 = studentRepository.findById(1).orElseThrow()
         val nueva = Certification(
-            name = "Spring Professional",
+            nameCertification = "Spring Professional",
             provider = "VMware",
             file_path = "/files/springpro.pdf",
             student = student1)
@@ -123,15 +123,15 @@ class LoadInitData(
     fun `findById returns the correct skill`() {
         val skill = qualificationRepository.findById(1).orElseThrow()
         Assertions.assertAll(
-            { Assertions.assertEquals(1, skill.id) },
-            { Assertions.assertEquals("English", skill.name) }
+            { Assertions.assertEquals(1, skill.idQualification) },
+            { Assertions.assertEquals("English", skill.nameQualification) }
         )
     }
 
     @Test
     fun `saving new skill increments the total`() {
         val nueva = Qualification(
-            name = "Spanish"
+            nameQualification = "Spanish"
         )
 
         qualificationRepository.save<Qualification>(nueva)
@@ -160,7 +160,7 @@ class LoadInitData(
     fun `findById returns the correct question`() {
         val skill = questionRepository.findById(1).orElseThrow()
         Assertions.assertAll(
-            { Assertions.assertEquals(1, skill.id) },
+            { Assertions.assertEquals(1, skill.idQuestion) },
             { Assertions.assertEquals("Do you offer night shifts?", skill.question) },
             { Assertions.assertEquals("Yes, just choose the timezone in preferences.", skill.answer) }
         )
@@ -199,11 +199,11 @@ class LoadInitData(
     fun `findById returns the correct recommendation`() {
         val recommendation = recommendationRepository.findById(3).orElseThrow()
         Assertions.assertAll(
-            { Assertions.assertEquals(3, recommendation.id) },
+            { Assertions.assertEquals(3, recommendation.idRecommendation) },
             { Assertions.assertEquals("Excelente actitud, proactividad y habilidades tecnicas destacables.",
                 recommendation.details) },
-            { Assertions.assertEquals(3, recommendation.student.id) },
-            { Assertions.assertEquals(2, recommendation.company.id)}
+            { Assertions.assertEquals(3, recommendation.student.idStudent) },
+            { Assertions.assertEquals(2, recommendation.company.idCompany)}
         )
     }
 
@@ -238,7 +238,7 @@ class LoadInitData(
     fun `findById returns the correct internship`() {
         val internship = internshipRepository.findById(3).orElseThrow()
         Assertions.assertAll(
-            { Assertions.assertEquals(3, internship.id) },
+            { Assertions.assertEquals(3, internship.idInternship) },
             { Assertions.assertEquals("Internship3", internship.details) }
         )
     }
@@ -272,8 +272,8 @@ class LoadInitData(
     fun `findById returns the correct company`() {
         val company = companyRepository.findById(2).orElseThrow()
         Assertions.assertAll(
-            { Assertions.assertEquals(2, company.id) },
-            { Assertions.assertEquals("GreenFuture Corp", company.name) }
+            { Assertions.assertEquals(2, company.idCompany) },
+            { Assertions.assertEquals("GreenFuture Corp", company.nameCompany) }
         )
     }
 
@@ -282,14 +282,14 @@ class LoadInitData(
         val user = userRepository.findById(4).orElseThrow()
 
         val newCompany = Company(
-            name = "Company4",
+            nameCompany = "Company4",
             description = "A new tech company",
             history = "Founded in 2025",
             mision = "Innovate everywhere",
             vision = "Future-oriented",
             corporateCultur = "Collaborative",
-            contact = 88889999,
-            rating = 4.7,
+            contactCompany = 88889999,
+            ratingCompany = 4.7,
             internshipType = "Remote",
             user = user
         )
@@ -317,7 +317,7 @@ class LoadInitData(
     @Test
     fun `findById returns correct location company`() {
         val location = locationCompanyRepository.findById(1).orElseThrow()
-        Assertions.assertEquals(1, location.id)
+        Assertions.assertEquals(1, location.idLocationCompany)
     }
 
     @Test
@@ -327,7 +327,7 @@ class LoadInitData(
             latitude = 10.0,
             longitude = -84.0,
             email = "test@company.com",
-            contact = 12345678,
+            contactLocation = 12345678,
             company = company
         )
         locationCompanyRepository.save(nueva)
@@ -351,7 +351,7 @@ class LoadInitData(
     @Test
     fun `findById returns correct internship location`() {
         val location = internshipLocationRepository.findById(1).orElseThrow()
-        Assertions.assertEquals(1, location.id)
+        Assertions.assertEquals(1, location.idInternshipLocation)
     }
 
     @Test
@@ -384,7 +384,7 @@ class LoadInitData(
     @Test
     fun `findById returns correct rating`() {
         val rating = ratingCompanyStudentRepository.findById(1).orElseThrow()
-        Assertions.assertEquals(1, rating.id)
+        Assertions.assertEquals(1, rating.idRating)
     }
 
     @Test
@@ -421,7 +421,7 @@ class LoadInitData(
     @Test
     fun `findById returns correct student`() {
         val student = studentRepository.findById(1).orElseThrow()
-        Assertions.assertEquals(1, student.id)
+        Assertions.assertEquals(1, student.idStudent)
     }
 
     @Test
@@ -436,12 +436,12 @@ class LoadInitData(
         val user5 = userRepository.findById(5).orElseThrow()
 
         Assertions.assertAll(
-            { Assertions.assertEquals(3, student.id) },
-            { Assertions.assertEquals("Andres",student.name) },
+            { Assertions.assertEquals(3, student.idStudent) },
+            { Assertions.assertEquals("Andres",student.nameStudent) },
             { Assertions.assertEquals("3333", student.identification) },
             { Assertions.assertEquals("None",student.personalInfo)},
             { Assertions.assertEquals("None",student.experience)},
-            { Assertions.assertEquals(0.0,student.rating)},
+            { Assertions.assertEquals(0.0,student.ratingStudent)},
             { Assertions.assertEquals(user5,student.user)}
         )
     }
@@ -451,11 +451,11 @@ class LoadInitData(
         val user = userRepository.findById(3).orElseThrow()
 
         val nuevo = Student(
-            name = "Carlos",
+            nameStudent = "Carlos",
             identification = "2222",
             personalInfo = "Some info",
             experience = "Some experience",
-            rating = 0.0,
+            ratingStudent = 0.0,
             user = user
         )
 
@@ -480,7 +480,7 @@ class LoadInitData(
     @Test
     fun `findById returns correct request`() {
         val request = requestRepository.findById(1).orElseThrow()
-        Assertions.assertEquals(1, request.id)
+        Assertions.assertEquals(1, request.idRequest)
     }
 
     @Test

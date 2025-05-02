@@ -1,8 +1,8 @@
 ALTER SEQUENCE companies_id_seq RESTART WITH 1;
-ALTER TABLE companies ALTER COLUMN id SET DEFAULT nextval('companies_id_seq');
+ALTER TABLE companies ALTER COLUMN id_company SET DEFAULT nextval('companies_id_seq');
 INSERT INTO public.companies (
-    name, description, history, mision, vision, corporate_cultur,
-    contact, rating, internship_type, user_id
+    name_company, description, history, mision, vision, corporate_cultur,
+    contact_company, rating_company, internship_type, user_id
 ) VALUES
       (
           'TechNova Solutions',

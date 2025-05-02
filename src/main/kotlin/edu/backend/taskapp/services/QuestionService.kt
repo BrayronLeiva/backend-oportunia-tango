@@ -1,5 +1,6 @@
 package edu.backend.taskapp.services
 
+import edu.backend.taskapp.CompanyRepository
 import edu.backend.taskapp.dtos.QuestionInput
 import edu.backend.taskapp.dtos.QuestionOutput
 import edu.backend.taskapp.mappers.QuestionMapper
@@ -47,6 +48,8 @@ interface QuestionService {
 @Service
 class AbstractQuestionService(
     @Autowired
+    val companyRepository: CompanyRepository,
+    @Autowired
     val questionRepository: QuestionRepository,
     @Autowired
     val questionMapper: QuestionMapper,
@@ -84,7 +87,12 @@ class AbstractQuestionService(
      * @return the user created
      */
     override fun create(questionInput: QuestionInput): QuestionOutput? {
-        val question: Question = questionMapper.questionInputToQuestion(questionInput)
+        val company = companyRepository.findById(questionInput.companyId!!)
+            .orElseThrow { NoSuchElementException("Company with ID ${questionInput.companyId} not found") }
+
+        val question = questionMapper.questionInputToQuestion(questionInput, company)
+        question.company = company
+
         return questionMapper.questionToQuestionOutput(
             questionRepository.save(question)
         )
@@ -97,9 +105,9 @@ class AbstractQuestionService(
      */
     @Throws(NoSuchElementException::class)
     override fun update(questionInput: QuestionInput): QuestionOutput? {
-        val question: Optional<Question> = questionRepository.findById(questionInput.id!!)
+        val question: Optional<Question> = questionRepository.findById(questionInput.idQuestion!!)
         if (question.isEmpty) {
-            throw NoSuchElementException(String.format("The question with the id: %s not found!", questionInput.id))
+            throw NoSuchElementException(String.format("The question with the id: %s not found!", questionInput.idQuestion))
         }
         val questionUpdated: Question = question.get()
         questionMapper.questionInputToQuestion(questionInput, questionUpdated)

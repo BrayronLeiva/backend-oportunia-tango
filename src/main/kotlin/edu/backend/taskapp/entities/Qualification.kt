@@ -1,11 +1,6 @@
 package edu.backend.taskapp.entities
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.SequenceGenerator
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "qualifications")
@@ -17,29 +12,26 @@ data class Qualification(
         sequenceName = "qualifications_id_seq",
         allocationSize = 1
     )
-    var id: Long? = null,
+    @Column(name = "id_qualification")
+    val idQualification: Long? = null,
 
-    var name: String,
-
-
-
+    @Column(name = "name_qualification")
+    var nameQualification: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Qualification) return false
 
-        if (id != other.id) return false
+        if (idQualification != other.idQualification) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return idQualification?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "Qualification(id=$id, name='$name')"
+        return "Qualification(idQualification=$idQualification, nameQualification='$nameQualification')"
     }
-
-
 }

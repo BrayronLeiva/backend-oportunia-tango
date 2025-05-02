@@ -1,5 +1,6 @@
 package edu.backend.taskapp.entities
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -19,7 +20,8 @@ data class Question(
         sequenceName = "questions_id_seq",
         allocationSize = 1
     )
-    var id: Long? = null,
+    @Column(name = "id_question")
+    val idQuestion: Long? = null,
 
     var question: String,
 
@@ -27,7 +29,7 @@ data class Question(
 
     // Entity Relationship
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id_company")
     var company: Company,
 
 
@@ -36,16 +38,16 @@ data class Question(
         if (this === other) return true
         if (other !is Question) return false
 
-        if (id != other.id) return false
+        if (idQuestion != other.idQuestion) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return idQuestion?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "Question(id=$id, question='$question', answer='$answer')"
+        return "Question(idQuestion=$idQuestion, question='$question', answer='$answer')"
     }
 }

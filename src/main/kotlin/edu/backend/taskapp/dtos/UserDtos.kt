@@ -20,7 +20,7 @@ data class PrivilegeDetails (
 data class RoleDetails (
     var id: Long? = null,
     var name: String? = null,
-    var privileges: List<PrivilegeDetails>? = null,
+    var privileges: List<PrivilegeDetails>? = emptyList(),
 )
 
 data class UserInput(
@@ -30,7 +30,8 @@ data class UserInput(
     var email: String?=null,
     var password: String?=null,
     var enabled: Boolean?=null,
-    var roles: List<RoleDetails>?=null,
+    var createDate: Date?= Date(),
+    var roles: List<RoleDetails>?=emptyList(),
 )
 
 data class UserOutput(
@@ -42,5 +43,5 @@ data class UserOutput(
     var enabled: Boolean?,
     var tokenExpired: Boolean?,
     var createDate: Date,
-    var roles: List<RoleDetails>,
+    var roles: List<RoleDetails>?,
 )

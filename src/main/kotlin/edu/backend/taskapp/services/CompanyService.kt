@@ -1,6 +1,7 @@
 package edu.backend.taskapp.services
 
 import edu.backend.taskapp.CompanyRepository
+import edu.backend.taskapp.UserRepository
 import edu.backend.taskapp.dtos.CompanyInput
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.entities.Company
@@ -19,6 +20,8 @@ interface CompanyService {
 
 @Service
 class AbstractCompanyService(
+    @Autowired
+    val userRepository: UserRepository,
     @Autowired
     val companyRepository: CompanyRepository,
     @Autowired
@@ -40,16 +43,21 @@ class AbstractCompanyService(
     }
 
     override fun create(companyInput: CompanyInput): CompanyOutput? {
-        val company: Company = companyMapper.companyInputToCompany(companyInput)
+        val user = userRepository.findById(companyInput.userId!!)
+            .orElseThrow { NoSuchElementException("User with ID ${companyInput.userId} not found") }
+
+        val company: Company = companyMapper.companyInputToCompany(companyInput, user)
+        company.user = user
+
         return companyMapper.companyToCompanyOutput(
             companyRepository.save(company)
         )
     }
 
     override fun update(companyInput: CompanyInput): CompanyOutput? {
-        val existing: Optional<Company> = companyRepository.findById(companyInput.id!!)
+        val existing: Optional<Company> = companyRepository.findById(companyInput.idCompany!!)
         if (existing.isEmpty) {
-            throw NoSuchElementException("The company with the id: ${companyInput.id} not found!")
+            throw NoSuchElementException("The company with the id: ${companyInput.idCompany} not found!")
         }
         val updated: Company = existing.get()
         companyMapper.companyInputToCompany(companyInput, updated)

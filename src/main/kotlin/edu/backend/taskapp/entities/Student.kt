@@ -1,6 +1,7 @@
 package edu.backend.taskapp.entities
 
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -24,9 +25,10 @@ data class Student(
         sequenceName = "students_id_seq",
         allocationSize = 1
     )
-    val id: Long? = null,
+    @Column(name = "id_student")
+    val idStudent: Long? = null,
 
-    var name: String,
+    var nameStudent: String,
 
     var identification: String,
 
@@ -34,7 +36,7 @@ data class Student(
 
     var experience: String,
 
-    val rating: Double,
+    val ratingStudent: Double,
 
 
     // Entity Relationship
@@ -61,17 +63,17 @@ data class Student(
         if (this === other) return true
         if (other !is Student) return false
 
-        if (id != other.id) return false
+        if (idStudent != other.idStudent) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return idStudent?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "Student(id=$id, name='$name', identification='$identification', personalInfo='$personalInfo', experience='$experience', rating=$rating, user=$user)"
+        return "Student(idStudent=$idStudent, nameStudent='$nameStudent', identification='$identification', personalInfo='$personalInfo', experience='$experience', ratingStudent=$ratingStudent, user=$user)"
     }
 
 

@@ -1,6 +1,5 @@
 package edu.backend.taskapp.entities
 
-import edu.backend.taskapp.Task
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -8,7 +7,6 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
-import jakarta.persistence.OneToMany
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import java.util.Date
@@ -31,9 +29,6 @@ data class User(
     var createDate: Date,
     var enabled: Boolean?,
     var tokenExpired: Boolean?,
-    // Entity Relationship
-    @OneToMany(mappedBy = "user")
-    var taskList: List<Task>,
     @ManyToMany
     @JoinTable(
         name = "user_role",
@@ -60,7 +55,7 @@ data class User(
     }
 
     override fun toString(): String {
-        return "User(id=$id, firstName='$firstName', lastName='$lastName', password='$password', email='$email', createDate=$createDate, enabled=$enabled, tokenExpired=$tokenExpired, taskList=$taskList, roleList=$roleList)"
+        return "User(id=$id, firstName='$firstName', lastName='$lastName', password='$password', email='$email', createDate=$createDate, enabled=$enabled, tokenExpired=$tokenExpired, roleList=$roleList)"
     }
 
 }

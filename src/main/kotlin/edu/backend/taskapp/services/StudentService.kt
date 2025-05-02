@@ -4,6 +4,7 @@ import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.mappers.StudentMapper
 import edu.backend.taskapp.StudentRepository
+import edu.backend.taskapp.UserRepository
 import edu.backend.taskapp.entities.Student
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -47,6 +48,8 @@ interface StudentService {
 @Service
 class AbstractStudentService(
     @Autowired
+    val userRepository: UserRepository,
+    @Autowired
     val studentRepository: StudentRepository,
     @Autowired
     val studentMapper: StudentMapper,
@@ -84,7 +87,12 @@ class AbstractStudentService(
      * @return the user created
      */
     override fun create(studentInput: StudentInput): StudentOutput? {
-        val student: Student = studentMapper.studentInputToStudent(studentInput)
+        val user = userRepository.findById(studentInput.userId!!)
+            .orElseThrow { NoSuchElementException("User with ID ${studentInput.userId} not found") }
+
+        val student = studentMapper.studentInputToStudent(studentInput, user)
+        student.user = user
+
         return studentMapper.studentToStudentOutput(
             studentRepository.save(student)
         )
@@ -97,9 +105,9 @@ class AbstractStudentService(
      */
     @Throws(NoSuchElementException::class)
     override fun update(studentInput: StudentInput): StudentOutput? {
-        val student: Optional<Student> = studentRepository.findById(studentInput.id!!)
+        val student: Optional<Student> = studentRepository.findById(studentInput.idStudent!!)
         if (student.isEmpty) {
-            throw NoSuchElementException(String.format("The student with the id: %s not found!", studentInput.id))
+            throw NoSuchElementException(String.format("The student with the id: %s not found!", studentInput.idStudent))
         }
         val studentUpdated: Student = student.get()
         studentMapper.studentInputToStudent(studentInput, studentUpdated)
