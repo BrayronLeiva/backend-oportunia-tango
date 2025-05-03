@@ -1,4 +1,4 @@
-package edu.backend.taskapp
+package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.InternshipInput
 import edu.backend.taskapp.dtos.InternshipOutput

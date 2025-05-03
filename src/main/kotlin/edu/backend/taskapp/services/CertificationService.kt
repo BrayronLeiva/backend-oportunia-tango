@@ -1,10 +1,12 @@
 package edu.backend.taskapp.services
 
 import edu.backend.taskapp.CertificationRepository
+import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.dtos.CertificationInput
 import edu.backend.taskapp.dtos.CertificationOutput
 import edu.backend.taskapp.mappers.CertificationMapper
 import edu.backend.taskapp.entities.Certification
+import edu.backend.taskapp.entities.Company
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -47,6 +49,8 @@ interface CertificationService {
 @Service
 class AbstractCertificationService(
     @Autowired
+    val studentRepository: StudentRepository,
+    @Autowired
     val certificationRepository: CertificationRepository,
     @Autowired
     val certificationMapper: CertificationMapper,
@@ -83,7 +87,12 @@ class AbstractCertificationService(
      * @return the user created
      */
     override fun create(certificationInput: CertificationInput): CertificationOutput? {
-        val certification: Certification = certificationMapper.certificationInputToCertification(certificationInput)
+        val student = studentRepository.findById(certificationInput.studentId!!)
+            .orElseThrow { NoSuchElementException("Student with ID ${certificationInput.studentId} not found") }
+
+        val certification: Certification = certificationMapper.certificationInputToCertification(certificationInput, student)
+        certification.student = student
+
         return certificationMapper.certificationToCertificationOutput(
             certificationRepository.save(certification)
         )

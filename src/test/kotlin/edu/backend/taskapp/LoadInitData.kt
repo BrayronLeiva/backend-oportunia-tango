@@ -491,7 +491,7 @@ class LoadInitData(
         val nuevo = Request(
             state = true,
             student = student,
-            internshipLocations = internshipLocation
+            internshipLocation = internshipLocation
         )
 
         requestRepository.save(nuevo)
