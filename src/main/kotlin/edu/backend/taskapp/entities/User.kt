@@ -27,15 +27,15 @@ data class User(
     var password: String,
     var email: String,
     var createDate: Date,
-    var enabled: Boolean?,
+    var enabled: Boolean,
     var tokenExpired: Boolean?,
     @ManyToMany
     @JoinTable(
         name = "user_role",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id_role")]
     )
-    var roleList: Set<Role>,
+    var roleList: Set<Role>?,
 
     ) {
     override fun equals(other: Any?): Boolean {

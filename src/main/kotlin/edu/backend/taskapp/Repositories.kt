@@ -5,19 +5,25 @@ import edu.backend.taskapp.entities.Company
 import edu.backend.taskapp.entities.Internship
 import edu.backend.taskapp.entities.InternshipLocation
 import edu.backend.taskapp.entities.LocationCompany
+import edu.backend.taskapp.entities.Privilege
 import edu.backend.taskapp.entities.Qualification
 import edu.backend.taskapp.entities.Question
 import edu.backend.taskapp.entities.RatingCompanyStudent
 import edu.backend.taskapp.entities.Recommendation
 import edu.backend.taskapp.entities.Student
 import edu.backend.taskapp.entities.Request
+import edu.backend.taskapp.entities.Role
 import edu.backend.taskapp.entities.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import java.util.Optional
 
 
 @Repository
-interface UserRepository : JpaRepository<User, Long> {}
+interface UserRepository : JpaRepository<User, Long> {
+    fun findByEmail(email: String): Optional<User>
+}
+
 @Repository
 interface PriorityRepository: JpaRepository<Priority, Long>
 
@@ -56,3 +62,11 @@ interface RatingCompanyStudentRepository: JpaRepository<RatingCompanyStudent, Lo
 
 @Repository
 interface RequestRepository: JpaRepository<Request, Long>
+
+@Repository
+interface RoleRepository: JpaRepository<Role, Long> {
+    fun findByName(name: String): Optional<Role>
+}
+
+@Repository
+interface PrivilegeRepository: JpaRepository<Privilege, Long>
