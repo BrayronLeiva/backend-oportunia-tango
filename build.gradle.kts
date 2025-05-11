@@ -30,6 +30,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	kapt("org.springframework.boot:spring-boot-configuration-processor")
 	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+	// Coroutines para interoperar con reactor (Mono, Flux)
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
 
 }
 

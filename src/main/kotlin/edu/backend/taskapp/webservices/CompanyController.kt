@@ -2,13 +2,15 @@ package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.CompanyInput
 import edu.backend.taskapp.dtos.CompanyOutput
+import edu.backend.taskapp.dtos.StudentMatchResult
+import edu.backend.taskapp.services.AIService
 import edu.backend.taskapp.services.CompanyService
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("\${url.companies}")
-class CompanyController(private val companyService: CompanyService) {
+class CompanyController(private val companyService: CompanyService, private  val aiService: AIService) {
 
     /**
      * WS to find all elements of type Company
@@ -57,5 +59,18 @@ class CompanyController(private val companyService: CompanyService) {
     @ResponseBody
     fun deleteById(@PathVariable id: Long) {
         companyService.deleteById(id)
+    }
+
+    //Custom
+
+    /**
+     * WS to find the recommend students
+     * @param companyId the company to find students
+     * @return the list of recommendations
+     */
+    @GetMapping("/match/{companyId}")
+    @ResponseBody
+    suspend fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> {
+        return aiService.findRecommendedStudentsByCompany(companyId)
     }
 }

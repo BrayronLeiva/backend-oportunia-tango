@@ -26,3 +26,10 @@ data class StudentOutput(
     //var ratings: List<RatingCompanyStudentOutput>,
     )
 
+
+data class StudentMatchResult(
+    val idStudent: Long,
+    val nameStudent: String,
+    val score: Int,
+    val reason: String
+)

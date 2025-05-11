@@ -1,0 +1,143 @@
+package edu.backend.taskapp.services
+
+import edu.backend.taskapp.CompanyRepository
+import edu.backend.taskapp.StudentRepository
+import edu.backend.taskapp.dtos.CertificationOutput
+import edu.backend.taskapp.dtos.CompanyOutput
+import edu.backend.taskapp.dtos.LocationCompanyInput
+import edu.backend.taskapp.dtos.LocationCompanyOutput
+import edu.backend.taskapp.dtos.OpenAIResponse
+import edu.backend.taskapp.dtos.StudentMatchResult
+import edu.backend.taskapp.dtos.StudentOutput
+import edu.backend.taskapp.entities.Certification
+import edu.backend.taskapp.entities.Student
+import edu.backend.taskapp.mappers.CompanyMapper
+import edu.backend.taskapp.mappers.StudentMapper
+import jakarta.persistence.EntityNotFoundException
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.WebClient
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.coroutineScope
+import org.springframework.beans.factory.annotation.Autowired
+import java.util.NoSuchElementException
+import java.util.Optional
+
+interface AIService {
+    suspend fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult>
+}
+
+@Service
+class AbstractAIService(
+    @Value("\${openAiApiKey}") private val apiKey: String,
+    @Autowired
+    val companyRepository: CompanyRepository,
+    @Autowired
+    val studentRepository: StudentRepository,
+    @Autowired
+    val companyMapper: CompanyMapper,
+    @Autowired
+    val studentMapper: StudentMapper
+) : AIService {
+
+    private val webClient = WebClient.builder()
+        .baseUrl("https://api.openai.com/v1/chat/completions")
+        .defaultHeader("Authorization", "Bearer $apiKey")
+        .defaultHeader("Content-Type", "application/json")
+        .build()
+
+
+    /**
+     * Get recommended students by company
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override suspend fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult> {
+        val company = companyRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Company $id not found") }
+
+        val students = studentRepository.findAll() // By the moment
+
+        // Aquí deberías mapear a tus DTOs CompanyOutput y StudentOutput
+        val companyDto = companyMapper.companyToCompanyOutput(company)
+        val studentsDtos = studentMapper.studentListToStudentOutputList(students)
+
+        return matchStudentsWithCompany(companyDto, studentsDtos)
+    }
+
+
+
+    private suspend fun matchStudentsWithCompany(
+        company: CompanyOutput,
+        students: List<StudentOutput>
+    ): List<StudentMatchResult> = coroutineScope {
+        students.map { student ->
+            async {
+                val prompt = generatePrompt(student, company)
+
+                val request = mapOf(
+                    "model" to "gpt-4-turbo",
+                    "messages" to listOf(
+                        mapOf("role" to "system", "content" to "Eres un sistema experto en selección de pasantías."),
+                        mapOf("role" to "user", "content" to prompt)
+                    ),
+                    "temperature" to 0.4
+                )
+
+                val response = webClient.post()
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(OpenAIResponse::class.java)
+                    .awaitSingle()
+
+                parseResponse(response.choices.first().message.content, student)
+            }
+        }.awaitAll()
+    }
+
+    private fun generatePrompt(student: StudentOutput, company: CompanyOutput): String {
+        return """
+        Eres un sistema experto en selección de pasantes. Evalúa si el siguiente estudiante es adecuado para hacer una pasantía en la empresa descrita.
+
+        Devuelve una puntuación de 0 a 100 y explica brevemente el motivo.
+
+        Estudiante:
+        Nombre: ${student.nameStudent}
+        Información personal: ${student.personalInfo}
+        Experiencia: ${student.experience}
+        Rating: ${student.ratingStudent}
+
+        Empresa:
+        Nombre: ${company.nameCompany}
+        Descripción: ${company.description}
+        Misión: ${company.mision}
+        Tipo de pasantía: ${company.internshipType}
+        Cultura corporativa: ${company.corporateCultur}
+        Rating: ${company.ratingCompany}
+
+        Formato de respuesta:
+        score: [número del 0 al 100]
+        reason: [explicación breve]
+    """.trimIndent()
+    }
+
+
+
+    private fun parseResponse(content: String, student: StudentOutput): StudentMatchResult {
+        val scoreRegex = Regex("score:\\s*(\\d+)")
+        val reasonRegex = Regex("reason:\\s*(.*)", RegexOption.DOT_MATCHES_ALL)
+
+        val score = scoreRegex.find(content)?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        val reason = reasonRegex.find(content)?.groupValues?.get(1)?.trim() ?: "No se pudo obtener explicación"
+
+        return StudentMatchResult(
+            idStudent = student.idStudent ?: 0,
+            nameStudent = student.nameStudent ?: "Desconocido",
+            score = score,
+            reason = reason
+        )
+    }
+}
