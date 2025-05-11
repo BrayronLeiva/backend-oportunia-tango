@@ -13,6 +13,8 @@ import edu.backend.taskapp.entities.Student
 import edu.backend.taskapp.entities.Request
 import edu.backend.taskapp.entities.User
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 
@@ -25,7 +27,18 @@ interface PriorityRepository: JpaRepository<Priority, Long>
 interface TaskRepository: JpaRepository<Task, Long>
 
 @Repository
-interface StudentRepository: JpaRepository<Student, Long>
+interface StudentRepository: JpaRepository<Student, Long> {
+
+    @Query("""
+        SELECT DISTINCT r.student
+        FROM Request r
+        JOIN r.internshipLocation il
+        JOIN il.locationCompany lc
+        JOIN lc.company c
+        WHERE c.idCompany = :companyId
+    """)
+    fun findStudentsRecommendedByCompanyId(@Param("companyId") companyId: Long): List<Student>
+}
 
 @Repository
 interface QuestionRepository: JpaRepository<Question, Long>

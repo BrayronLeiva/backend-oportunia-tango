@@ -43,6 +43,12 @@ interface StudentService {
      * @param id of the Task
      */
     fun deleteById(id: Long)
+
+    /**
+     * Find the recommended students for a company
+     * @param companyId of the Company
+     */
+    fun getStudentsRecommendedForCompany(companyId: Long): List<StudentOutput>
 }
 
 @Service
@@ -126,4 +132,12 @@ class AbstractStudentService(
             throw NoSuchElementException(String.format("The student with the id: %s not found!", id))
         }
     }
+
+    override fun getStudentsRecommendedForCompany(companyId: Long): List<StudentOutput> {
+        return studentMapper.studentListToStudentOutputList(
+            studentRepository.findStudentsRecommendedByCompanyId(companyId)
+        )
+    }
+
+
 }

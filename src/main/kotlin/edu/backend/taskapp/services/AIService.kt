@@ -26,20 +26,15 @@ import java.util.NoSuchElementException
 import java.util.Optional
 
 interface AIService {
-    suspend fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult>
+    suspend fun matchStudentsWithCompany(
+        company: CompanyOutput,
+        students: List<StudentOutput>
+    ): List<StudentMatchResult>
 }
 
 @Service
 class AbstractAIService(
-    @Value("\${openAiApiKey}") private val apiKey: String,
-    @Autowired
-    val companyRepository: CompanyRepository,
-    @Autowired
-    val studentRepository: StudentRepository,
-    @Autowired
-    val companyMapper: CompanyMapper,
-    @Autowired
-    val studentMapper: StudentMapper
+    @Value("\${openAiApiKey}") private val apiKey: String
 ) : AIService {
 
     private val webClient = WebClient.builder()
@@ -48,29 +43,7 @@ class AbstractAIService(
         .defaultHeader("Content-Type", "application/json")
         .build()
 
-
-    /**
-     * Get recommended students by company
-     * @param id of the Task
-     * @return the Task found
-     */
-    @Throws(java.util.NoSuchElementException::class)
-    override suspend fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult> {
-        val company = companyRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("Company $id not found") }
-
-        val students = studentRepository.findAll() // By the moment
-
-        // Aquí deberías mapear a tus DTOs CompanyOutput y StudentOutput
-        val companyDto = companyMapper.companyToCompanyOutput(company)
-        val studentsDtos = studentMapper.studentListToStudentOutputList(students)
-
-        return matchStudentsWithCompany(companyDto, studentsDtos)
-    }
-
-
-
-    private suspend fun matchStudentsWithCompany(
+    override suspend fun matchStudentsWithCompany(
         company: CompanyOutput,
         students: List<StudentOutput>
     ): List<StudentMatchResult> = coroutineScope {
@@ -79,7 +52,7 @@ class AbstractAIService(
                 val prompt = generatePrompt(student, company)
 
                 val request = mapOf(
-                    "model" to "gpt-4-turbo",
+                    "model" to "gpt-4o-mini",
                     "messages" to listOf(
                         mapOf("role" to "system", "content" to "Eres un sistema experto en selección de pasantías."),
                         mapOf("role" to "user", "content" to prompt)

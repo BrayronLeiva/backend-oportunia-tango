@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("\${url.companies}")
-class CompanyController(private val companyService: CompanyService, private  val aiService: AIService) {
+class CompanyController(private val companyService: CompanyService) {
 
     /**
      * WS to find all elements of type Company
@@ -71,6 +71,6 @@ class CompanyController(private val companyService: CompanyService, private  val
     @GetMapping("/match/{companyId}")
     @ResponseBody
     suspend fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> {
-        return aiService.findRecommendedStudentsByCompany(companyId)
+        return companyService.findRecommendedStudentsByCompany(companyId)
     }
 }
