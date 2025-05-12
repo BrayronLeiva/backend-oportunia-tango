@@ -11,3 +11,17 @@ data class InternshipOutput(
     var details: String?,
     //var internshipLocations: List<InternshipLocationOutput>
 )
+
+data class InternshipEvaluateOutput(
+    var idInternship: Long?,
+    var details: String?,
+    var company : CompanyOutput
+    //var internshipLocations: List<InternshipLocationOutput>
+)
+
+data class InternshipMatchResult(
+    val internshipId: Long,
+    val internshipTitle: String,
+    val score: Int,
+    val reason: String
+)

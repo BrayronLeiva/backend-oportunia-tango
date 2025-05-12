@@ -1,7 +1,9 @@
 package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.InternshipInput
+import edu.backend.taskapp.dtos.InternshipMatchResult
 import edu.backend.taskapp.dtos.InternshipOutput
+import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.services.InternshipService
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
@@ -57,5 +59,18 @@ class InternshipController(private val internshipService: InternshipService) {
     @ResponseBody
     fun deleteById(@PathVariable id: Long) {
         internshipService.deleteById(id)
+    }
+
+    /**
+     * WS to delete an Internship by id
+     * @param id to identify the internship
+     */
+    @GetMapping("/recommendations/{studentId}")
+    @ResponseBody
+    suspend fun recommendInternshipsForStudent(
+        @PathVariable studentId: Long,
+        @RequestBody location: LocationRequestDTO
+    ): List<InternshipMatchResult> {
+        return internshipService.findRecommendedInternshipsByStudent(studentId, location)
     }
 }

@@ -5,7 +5,10 @@ import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.mappers.StudentMapper
 import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.UserRepository
+import edu.backend.taskapp.dtos.InternshipMatchResult
+import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.entities.Student
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.Optional
@@ -48,7 +51,7 @@ interface StudentService {
      * Find the recommended students for a company
      * @param companyId of the Company
      */
-    fun getStudentsRecommendedForCompany(companyId: Long): List<StudentOutput>
+    fun getStudentsRequestingForCompany(companyId: Long): List<StudentOutput>
 }
 
 @Service
@@ -133,11 +136,12 @@ class AbstractStudentService(
         }
     }
 
-    override fun getStudentsRecommendedForCompany(companyId: Long): List<StudentOutput> {
+    override fun getStudentsRequestingForCompany(companyId: Long): List<StudentOutput> {
         return studentMapper.studentListToStudentOutputList(
-            studentRepository.findStudentsRecommendedByCompanyId(companyId)
+            studentRepository.findStudentsRequestingByCompanyId(companyId)
         )
     }
+
 
 
 }

@@ -95,7 +95,7 @@ class AbstractCompanyService(
         val company = companyRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Company $id not found") }
 
-        val students = studentRepository.findStudentsRecommendedByCompanyId(id) // By the moment
+        val students = studentRepository.findStudentsRequestingByCompanyId(id) // By the moment
 
         // Aquí deberías mapear a tus DTOs CompanyOutput y StudentOutput
         val companyDto = companyMapper.companyToCompanyOutput(company)
@@ -103,4 +103,6 @@ class AbstractCompanyService(
 
         return aiService.matchStudentsWithCompany(companyDto, studentsDtos)
     }
+
+
 }

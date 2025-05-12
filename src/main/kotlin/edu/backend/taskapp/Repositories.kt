@@ -37,7 +37,7 @@ interface StudentRepository: JpaRepository<Student, Long> {
         JOIN lc.company c
         WHERE c.idCompany = :companyId
     """)
-    fun findStudentsRecommendedByCompanyId(@Param("companyId") companyId: Long): List<Student>
+    fun findStudentsRequestingByCompanyId(@Param("companyId") companyId: Long): List<Student>
 }
 
 @Repository
@@ -59,10 +59,31 @@ interface InternshipRepository: JpaRepository<Internship, Long>
 interface CompanyRepository: JpaRepository<Company, Long>
 
 @Repository
-interface LocationCompanyRepository: JpaRepository<LocationCompany, Long>
+interface LocationCompanyRepository: JpaRepository<LocationCompany, Long> {
+    @Query(
+        """
+    SELECT l FROM LocationCompany l
+    WHERE 
+        (6371 * acos(
+            cos(radians(:latitude)) * cos(radians(l.latitude)) *
+            cos(radians(l.longitude) - radians(:longitude)) +
+            sin(radians(:latitude)) * sin(radians(l.latitude))
+        )) < :radiusKm
+    """
+    )
+    fun findLocationsNear(
+        @Param("latitude") latitude: Double,
+        @Param("longitude") longitude: Double,
+        @Param("radiusKm") radiusKm: Double = 30.0
+    ): List<LocationCompany>
+
+}
 
 @Repository
-interface InternshipLocationRepository: JpaRepository<InternshipLocation, Long>
+interface InternshipLocationRepository: JpaRepository<InternshipLocation, Long>{
+    fun findByLocationCompany(locationCompany: LocationCompany): List<InternshipLocation>
+
+}
 
 @Repository
 interface RatingCompanyStudentRepository: JpaRepository<RatingCompanyStudent, Long>
