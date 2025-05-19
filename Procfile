@@ -1,1 +1,1 @@
-web: java -jar build/libs/oportuniamaps-1.0.jar
+web: java -Dspring.profiles.active=heroku -jar build/libs/oportuniamaps-1.0.jar
