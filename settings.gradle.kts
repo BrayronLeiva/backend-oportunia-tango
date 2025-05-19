@@ -1,1 +1,1 @@
-rootProject.name = "taskapp"
+rootProject.name = "oportuniamaps"
