@@ -2,16 +2,6 @@ package edu.backend.taskapp.dtos
 
 import java.util.Date
 
-data class StatusDetails(
-    var id:Long? = null,
-    var label: String? = null,
-)
-
-data class PriorityDetails(
-    var id:Long? = null,
-    var label: String? = null,
-)
-
 data class PrivilegeDetails (
     var id: Long? = null,
     var name: String? = null
@@ -21,6 +11,11 @@ data class RoleDetails (
     var id: Long? = null,
     var name: String? = null,
     var privileges: List<PrivilegeDetails>? = emptyList(),
+)
+
+data class UserLoginInput(
+    var username: String = "",
+    var password: String = "",
 )
 
 data class UserInput(
@@ -39,7 +34,6 @@ data class UserOutput(
     var firstName: String,
     var lastName: String,
     var email: String,
-    var password: String,
     var enabled: Boolean?,
     var tokenExpired: Boolean?,
     var createDate: Date,

@@ -20,7 +20,8 @@ data class Certification(
 
     var provider: String,
 
-    var file_path: String,
+    @Column(name = "file_path")
+    var filePath: String? = "",
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id_student")

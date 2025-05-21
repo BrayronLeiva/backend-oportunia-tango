@@ -30,18 +30,26 @@ import org.springframework.test.context.jdbc.Sql
         "DELETE FROM public.internships_locations",
         "DELETE FROM public.locations_company",
         "DELETE FROM public.companies",
+        "DELETE FROM public.user_role",
         "DELETE FROM public.users",
         "DELETE FROM public.internships",
+        "DELETE FROM public.role_privilege",
+        "DELETE FROM public.role",
+        "DELETE FROM public.privilege"
     ],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 @Sql(
-    scripts = ["/import-users.sql", "/import-internships.sql", "/import-students.sql", "/import-certifications.sql", "/import-qualifications.sql"
+    scripts = ["/import-role.sql","/import-users.sql", "/import-user-role.sql", "/import-internships.sql", "/import-students.sql", "/import-certifications.sql", "/import-qualifications.sql"
         ,"/import-companies.sql", "/import-locations-company.sql", "/import-internships-locations.sql","/import-questions.sql", "/import-recommendations.sql"
         ,"/import-ratings-company-students.sql", "/import-requests.sql"],
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class LoadInitData(
+    @Autowired
+    val roleRepository: RoleRepository,
+    @Autowired
+    val privilegeRepository: PrivilegeRepository,
     @Autowired
     val userRepository: UserRepository,
     @Autowired
@@ -94,7 +102,7 @@ class LoadInitData(
         val nueva = Certification(
             nameCertification = "Spring Professional",
             provider = "VMware",
-            file_path = "/files/springpro.pdf",
+            filePath = "/files/springpro.pdf",
             student = student1)
 
         certificationRepository.save<Certification>(nueva)
