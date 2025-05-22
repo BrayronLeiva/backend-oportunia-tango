@@ -71,7 +71,7 @@ class CompanyController(private val companyService: CompanyService) {
      */
     @GetMapping("/match/{companyId}")
     @ResponseBody
-    suspend fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> = runBlocking {
+    fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> = runBlocking {
         return@runBlocking companyService.findRecommendedStudentsByCompany(companyId)
     }
 }
