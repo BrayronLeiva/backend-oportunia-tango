@@ -5,6 +5,7 @@ import edu.backend.taskapp.dtos.InternshipMatchResult
 import edu.backend.taskapp.dtos.InternshipOutput
 import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.services.InternshipService
+import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
@@ -65,12 +66,12 @@ class InternshipController(private val internshipService: InternshipService) {
      * WS to delete an Internship by id
      * @param id to identify the internship
      */
-    @GetMapping("/recommendations/{studentId}")
+    @GetMapping("recommendations/{studentId}")
     @ResponseBody
-    suspend fun recommendInternshipsForStudent(
+     fun recommendInternshipsForStudent(
         @PathVariable studentId: Long,
         @RequestBody location: LocationRequestDTO
-    ): List<InternshipMatchResult> {
-        return internshipService.findRecommendedInternshipsByStudent(studentId, location)
+    ): List<InternshipMatchResult> = runBlocking {
+        return@runBlocking internshipService.findRecommendedInternshipsByStudent(studentId, location)
     }
 }

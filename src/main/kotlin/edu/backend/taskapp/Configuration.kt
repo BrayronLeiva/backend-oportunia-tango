@@ -22,6 +22,8 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import jakarta.annotation.Resource
 
+
+
 @Profile("initlocal")
 @Configuration
 @EnableWebSecurity
@@ -99,7 +101,7 @@ class JwtSecurityConfiguration {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authenticationProvider(authenticationProvider())
-            .apply(customDsl())
+            .apply(customDsl(userDetailsService!!))
 
         return http.build()
     }
@@ -119,7 +121,9 @@ class JwtSecurityConfiguration {
 
 }
 
-class AppCustomDsl : AbstractHttpConfigurer<AppCustomDsl?, HttpSecurity?>() {
+class AppCustomDsl(
+    private val userDetailsService: AppUserDetailsService
+) : AbstractHttpConfigurer<AppCustomDsl?, HttpSecurity?>() {
     override fun configure(http: HttpSecurity?) {
         super.configure(builder)
         val authenticationManager = http?.getSharedObject(
@@ -127,11 +131,11 @@ class AppCustomDsl : AbstractHttpConfigurer<AppCustomDsl?, HttpSecurity?>() {
         )
 
         http?.addFilter(JwtAuthenticationFilter(authenticationManager!!))
-        http?.addFilter(JwtAuthorizationFilter(authenticationManager!!))
+        http?.addFilter(JwtAuthorizationFilter(authenticationManager!!, userDetailsService))
     }
     companion object {
-        fun customDsl(): AppCustomDsl {
-            return AppCustomDsl()
+        fun customDsl(userDetailsService: AppUserDetailsService): AppCustomDsl {
+            return AppCustomDsl(userDetailsService)
         }
     }
 

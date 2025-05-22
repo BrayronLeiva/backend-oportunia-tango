@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import java.io.IOException
@@ -114,7 +115,10 @@ private fun key(): Key {
 /**
  * This class will validate the token
  */
-class JwtAuthorizationFilter(authenticationManager: AuthenticationManager) :
+class JwtAuthorizationFilter
+    (authenticationManager: AuthenticationManager,
+     private val userDetailsService: UserDetailsService
+) :
     BasicAuthenticationFilter(authenticationManager) {
 
     @Throws(IOException::class)
@@ -132,8 +136,9 @@ class JwtAuthorizationFilter(authenticationManager: AuthenticationManager) :
 
             LoggedUser.logIn(username)
 
+            val userDetails = userDetailsService.loadUserByUsername(username)
             SecurityContextHolder.getContext().authentication =
-                UsernamePasswordAuthenticationToken(username, null, emptyList())
+                UsernamePasswordAuthenticationToken(username, null, userDetails.authorities)
         }
 
         filterChain.doFilter(request, response)

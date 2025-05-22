@@ -5,6 +5,7 @@ import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.services.AIService
 import edu.backend.taskapp.services.CompanyService
+import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
@@ -70,7 +71,7 @@ class CompanyController(private val companyService: CompanyService) {
      */
     @GetMapping("/match/{companyId}")
     @ResponseBody
-    suspend fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> {
-        return companyService.findRecommendedStudentsByCompany(companyId)
+    suspend fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> = runBlocking {
+        return@runBlocking companyService.findRecommendedStudentsByCompany(companyId)
     }
 }
