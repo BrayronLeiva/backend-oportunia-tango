@@ -115,10 +115,7 @@ private fun key(): Key {
 /**
  * This class will validate the token
  */
-class JwtAuthorizationFilter
-    (authenticationManager: AuthenticationManager,
-     private val userDetailsService: UserDetailsService
-) :
+class JwtAuthorizationFilter(authenticationManager: AuthenticationManager) :
     BasicAuthenticationFilter(authenticationManager) {
 
     @Throws(IOException::class)
@@ -136,9 +133,8 @@ class JwtAuthorizationFilter
 
             LoggedUser.logIn(username)
 
-            val userDetails = userDetailsService.loadUserByUsername(username)
             SecurityContextHolder.getContext().authentication =
-                UsernamePasswordAuthenticationToken(username, null, userDetails.authorities)
+                UsernamePasswordAuthenticationToken(username, null, emptyList())
         }
 
         filterChain.doFilter(request, response)

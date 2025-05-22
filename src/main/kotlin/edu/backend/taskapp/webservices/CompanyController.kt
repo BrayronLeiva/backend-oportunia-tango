@@ -62,16 +62,5 @@ class CompanyController(private val companyService: CompanyService) {
         companyService.deleteById(id)
     }
 
-    //Custom
 
-    /**
-     * WS to find the recommend students
-     * @param companyId the company to find students
-     * @return the list of recommendations
-     */
-    @GetMapping("/match/{companyId}")
-    @ResponseBody
-    fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> = runBlocking {
-        return@runBlocking companyService.findRecommendedStudentsByCompany(companyId)
-    }
 }

@@ -1,8 +1,10 @@
 package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.StudentInput
+import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.services.StudentService
+import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
@@ -34,5 +36,18 @@ class StudentController(private val studentService: StudentService) {
     @ResponseBody
     fun deleteById(@PathVariable id: Long) {
         studentService.deleteById(id)
+    }
+
+    //Custom
+
+    /**
+     * WS to find the recommend students
+     * @param companyId the company to find students
+     * @return the list of recommendations
+     */
+    @GetMapping("/recommendations/{companyId}")
+    @ResponseBody
+    fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> {
+        return studentService.findRecommendedStudentsByCompany(companyId)
     }
 }

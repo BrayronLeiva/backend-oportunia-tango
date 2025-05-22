@@ -20,7 +20,7 @@ interface CompanyService {
     fun create(companyInput: CompanyInput): CompanyOutput?
     fun update(companyInput: CompanyInput): CompanyOutput?
     fun deleteById(id: Long)
-    suspend fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult>
+
 }
 
 @Service
@@ -85,24 +85,7 @@ class AbstractCompanyService(
         }
     }
 
-    /**
-     * Get recommended students by company
-     * @param id of the Task
-     * @return the Task found
-     */
-    @Throws(java.util.NoSuchElementException::class)
-    override suspend fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult> {
-        val company = companyRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("Company $id not found") }
 
-        val students = studentRepository.findStudentsRequestingByCompanyId(id) // By the moment
-
-        // Aquí deberías mapear a tus DTOs CompanyOutput y StudentOutput
-        val companyDto = companyMapper.companyToCompanyOutput(company)
-        val studentsDtos = studentMapper.studentListToStudentOutputList(students)
-
-        return aiService.matchStudentsWithCompany(companyDto, studentsDtos)
-    }
 
 
 }

@@ -1,42 +1,23 @@
 package edu.backend.taskapp.services
 
-import edu.backend.taskapp.CompanyRepository
-import edu.backend.taskapp.StudentRepository
-import edu.backend.taskapp.dtos.CertificationOutput
+
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.InternshipEvaluateOutput
 import edu.backend.taskapp.dtos.InternshipMatchResult
-import edu.backend.taskapp.dtos.InternshipOutput
-import edu.backend.taskapp.dtos.LocationCompanyInput
-import edu.backend.taskapp.dtos.LocationCompanyOutput
-import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.dtos.OpenAIResponse
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
-import edu.backend.taskapp.entities.Certification
-import edu.backend.taskapp.entities.Internship
-import edu.backend.taskapp.entities.Student
-import edu.backend.taskapp.mappers.CompanyMapper
-import edu.backend.taskapp.mappers.StudentMapper
-import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.reactor.awaitSingle
-import kotlinx.coroutines.coroutineScope
-import org.springframework.beans.factory.annotation.Autowired
-import java.util.NoSuchElementException
-import java.util.Optional
 
 interface AIService {
-    suspend fun matchStudentsWithCompany(
+    fun matchStudentsWithCompany(
         company: CompanyOutput,
         students: List<StudentOutput>
     ): List<StudentMatchResult>
 
-    suspend fun recommendInternshipsForStudent(
+    fun recommendInternshipsForStudent(
         student: StudentOutput,
         nearbyInternships: List<InternshipEvaluateOutput>
     ): List<InternshipMatchResult>
@@ -53,33 +34,35 @@ class AbstractAIService(
         .defaultHeader("Content-Type", "application/json")
         .build()
 
-    override suspend fun matchStudentsWithCompany(
+    override fun matchStudentsWithCompany(
         company: CompanyOutput,
         students: List<StudentOutput>
-    ): List<StudentMatchResult> = coroutineScope {
-        students.map { student ->
-            async {
-                val prompt = generatePrompt(student, company)
+    ): List<StudentMatchResult> {
+        return students.mapNotNull { student ->
 
-                val request = mapOf(
-                    "model" to "gpt-4o-mini",
-                    "messages" to listOf(
-                        mapOf("role" to "system", "content" to "Eres un sistema experto en selección de pasantías."),
-                        mapOf("role" to "user", "content" to prompt)
-                    ),
-                    "temperature" to 0.4
-                )
+            val prompt = generatePrompt(student, company)
 
-                val response = webClient.post()
-                    .bodyValue(request)
-                    .retrieve()
-                    .bodyToMono(OpenAIResponse::class.java)
-                    .awaitSingle()
+            val request = mapOf(
+                "model" to "gpt-4o-mini",
+                "messages" to listOf(
+                    mapOf("role" to "system", "content" to "Eres un sistema experto en selección de pasantías."),
+                    mapOf("role" to "user", "content" to prompt)
+                ),
+                "temperature" to 0.4
+            )
 
-                parseResponse(response.choices.first().message.content, student)
+            val response = webClient.post()
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(OpenAIResponse::class.java)
+                .block()
+
+            response?.let {
+                parseResponse(it.choices.first().message.content, student)
             }
-        }.awaitAll()
+        }
     }
+
 
     private fun generatePrompt(student: StudentOutput, company: CompanyOutput): String {
         return """
@@ -117,46 +100,44 @@ class AbstractAIService(
         val reason = reasonRegex.find(content)?.groupValues?.get(1)?.trim() ?: "No se pudo obtener explicación"
 
         return StudentMatchResult(
-            idStudent = student.idStudent ?: 0,
-            nameStudent = student.nameStudent ?: "Desconocido",
+            idStudent = student.idStudent,
+            nameStudent = student.nameStudent,
             score = score,
             reason = reason
         )
     }
 
-    override suspend fun recommendInternshipsForStudent(
+    override fun recommendInternshipsForStudent(
         student: StudentOutput,
         nearbyInternships: List<InternshipEvaluateOutput>
     ): List<InternshipMatchResult> {
 
+        return nearbyInternships.mapNotNull { internship ->
 
-        return coroutineScope {
-            nearbyInternships.map { internship ->
-                async {
-                    val company = internship.company
-                    val prompt = generatePrompt(student, company, internship)
+            val company = internship.company
+            val prompt = generatePrompt(student, company, internship)
 
-                    val request = mapOf(
-                        "model" to "gpt-4o-mini",
-                        "messages" to listOf(
-                            mapOf("role" to "system", "content" to "Eres un sistema experto en orientación de pasantías."),
-                            mapOf("role" to "user", "content" to prompt)
-                        ),
-                        "temperature" to 0.4
-                    )
+            val request = mapOf(
+                "model" to "gpt-4o-mini",
+                "messages" to listOf(
+                    mapOf("role" to "system", "content" to "Eres un sistema experto en orientación de pasantías."),
+                    mapOf("role" to "user", "content" to prompt)
+                ),
+                "temperature" to 0.4
+            )
 
-                    val response = webClient.post()
-                        .bodyValue(request)
-                        .retrieve()
-                        .bodyToMono(OpenAIResponse::class.java)
-                        .awaitSingle()
+            val response = webClient.post()
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(OpenAIResponse::class.java)
+                .block()
 
-                    parseResponseForInternship(response.choices.first().message.content, internship)
-
-                }
-            }.awaitAll()
+            response?.let {
+                parseResponseForInternship(it.choices.first().message.content, internship)
+            }
         }
     }
+
 
     private fun generatePrompt(student: StudentOutput, company: CompanyOutput, internship: InternshipEvaluateOutput): String {
         return """

@@ -71,7 +71,7 @@ class InternshipController(private val internshipService: InternshipService) {
      fun recommendInternshipsForStudent(
         @PathVariable studentId: Long,
         @RequestBody location: LocationRequestDTO
-    ): List<InternshipMatchResult> = runBlocking {
-        return@runBlocking internshipService.findRecommendedInternshipsByStudent(studentId, location)
+    ): List<InternshipMatchResult>  {
+        return internshipService.findRecommendedInternshipsByStudent(studentId, location)
     }
 }

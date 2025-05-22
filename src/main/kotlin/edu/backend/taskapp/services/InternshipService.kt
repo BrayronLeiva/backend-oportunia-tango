@@ -23,7 +23,7 @@ interface InternshipService {
     fun create(internshipInput: InternshipInput): InternshipOutput?
     fun update(internshipInput: InternshipInput): InternshipOutput?
     fun deleteById(id: Long)
-    suspend fun findRecommendedInternshipsByStudent(id: Long,  locationRequest: LocationRequestDTO): List<InternshipMatchResult>
+    fun findRecommendedInternshipsByStudent(id: Long,  locationRequest: LocationRequestDTO): List<InternshipMatchResult>
 }
 
 @Service
@@ -92,7 +92,7 @@ class AbstractInternshipService(
      * @return the Task found
      */
     @Throws(java.util.NoSuchElementException::class)
-    override suspend fun findRecommendedInternshipsByStudent(
+    override fun findRecommendedInternshipsByStudent(
         studentId: Long,
         locationRequest: LocationRequestDTO
     ): List<InternshipMatchResult> {

@@ -101,7 +101,7 @@ class JwtSecurityConfiguration {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authenticationProvider(authenticationProvider())
-            .apply(customDsl(userDetailsService!!))
+            .apply(customDsl())
 
         return http.build()
     }
@@ -121,9 +121,7 @@ class JwtSecurityConfiguration {
 
 }
 
-class AppCustomDsl(
-    private val userDetailsService: AppUserDetailsService
-) : AbstractHttpConfigurer<AppCustomDsl?, HttpSecurity?>() {
+class AppCustomDsl: AbstractHttpConfigurer<AppCustomDsl?, HttpSecurity?>() {
     override fun configure(http: HttpSecurity?) {
         super.configure(builder)
         val authenticationManager = http?.getSharedObject(
@@ -131,11 +129,11 @@ class AppCustomDsl(
         )
 
         http?.addFilter(JwtAuthenticationFilter(authenticationManager!!))
-        http?.addFilter(JwtAuthorizationFilter(authenticationManager!!, userDetailsService))
+        http?.addFilter(JwtAuthorizationFilter(authenticationManager!!))
     }
     companion object {
-        fun customDsl(userDetailsService: AppUserDetailsService): AppCustomDsl {
-            return AppCustomDsl(userDetailsService)
+        fun customDsl(): AppCustomDsl {
+            return AppCustomDsl()
         }
     }
 
