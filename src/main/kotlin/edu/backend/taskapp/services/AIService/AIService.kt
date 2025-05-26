@@ -1,15 +1,14 @@
-package edu.backend.taskapp.services
-
+package edu.backend.taskapp.services.AIService
 
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.InternshipEvaluateOutput
 import edu.backend.taskapp.dtos.InternshipMatchResult
-import edu.backend.taskapp.dtos.OpenAIResponse
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
-import org.springframework.beans.factory.annotation.Value
+import edu.backend.taskapp.services.AIService.AIStrategies.AIConnectionStrategy
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
+
+
 
 interface AIService {
     fun matchStudentsWithCompany(
@@ -25,14 +24,8 @@ interface AIService {
 
 @Service
 class AbstractAIService(
-    @Value("\${openAiApiKey}") private val apiKey: String
+    private val aiStrategy: AIConnectionStrategy
 ) : AIService {
-
-    private val webClient = WebClient.builder()
-        .baseUrl("https://api.openai.com/v1/chat/completions")
-        .defaultHeader("Authorization", "Bearer $apiKey")
-        .defaultHeader("Content-Type", "application/json")
-        .build()
 
     override fun matchStudentsWithCompany(
         company: CompanyOutput,
@@ -41,24 +34,9 @@ class AbstractAIService(
         return students.mapNotNull { student ->
 
             val prompt = generatePrompt(student, company)
-
-            val request = mapOf(
-                "model" to "gpt-4o-mini",
-                "messages" to listOf(
-                    mapOf("role" to "system", "content" to "Eres un sistema experto en selección de pasantías."),
-                    mapOf("role" to "user", "content" to prompt)
-                ),
-                "temperature" to 0.4
-            )
-
-            val response = webClient.post()
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(OpenAIResponse::class.java)
-                .block()
-
-            response?.let {
-                parseResponse(it.choices.first().message.content, student)
+            val behaviour = "\"Eres un sistema experto en selección de pasantías.\""
+            aiStrategy.make_request(prompt, behaviour)?.let { content ->
+                parseResponse(content, student)
             }
         }
     }
@@ -116,24 +94,9 @@ class AbstractAIService(
 
             val company = internship.company
             val prompt = generatePrompt(student, company, internship)
-
-            val request = mapOf(
-                "model" to "gpt-4o-mini",
-                "messages" to listOf(
-                    mapOf("role" to "system", "content" to "Eres un sistema experto en orientación de pasantías."),
-                    mapOf("role" to "user", "content" to prompt)
-                ),
-                "temperature" to 0.4
-            )
-
-            val response = webClient.post()
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(OpenAIResponse::class.java)
-                .block()
-
-            response?.let {
-                parseResponseForInternship(it.choices.first().message.content, internship)
+            val behaviour = "\"Eres un sistema experto en selección de pasantías.\""
+            aiStrategy.make_request(prompt, behaviour)?.let { content ->
+                parseResponseForInternship(content, internship)
             }
         }
     }

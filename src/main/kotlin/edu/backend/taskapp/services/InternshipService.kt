@@ -12,6 +12,7 @@ import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.mappers.CompanyMapper
 import edu.backend.taskapp.mappers.InternshipMapper
+import edu.backend.taskapp.services.AIService.AIService
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

@@ -3,7 +3,7 @@ package edu.backend.taskapp.webservices
 import edu.backend.taskapp.dtos.CompanyInput
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.StudentMatchResult
-import edu.backend.taskapp.services.AIService
+import edu.backend.taskapp.services.AIService.AIService
 import edu.backend.taskapp.services.CompanyService
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType

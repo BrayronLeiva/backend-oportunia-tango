@@ -9,6 +9,7 @@ import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.entities.Company
 import edu.backend.taskapp.mappers.CompanyMapper
 import edu.backend.taskapp.mappers.StudentMapper
+import edu.backend.taskapp.services.AIService.AIService
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
