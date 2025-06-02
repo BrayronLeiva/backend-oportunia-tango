@@ -35,4 +35,10 @@ class InternshipLocationController(private val internshipLocationService: Intern
     fun deleteById(@PathVariable id: Long) {
         internshipLocationService.deleteById(id)
     }
+
+    @GetMapping("/location/{locationId}")
+    @ResponseBody
+    fun findByLocationId(@PathVariable locationId: Long): List<InternshipLocationOutput> {
+        return internshipLocationService.findByLocationId(locationId)
+    }
 }

@@ -88,7 +88,7 @@ interface LocationCompanyRepository: JpaRepository<LocationCompany, Long> {
 @Repository
 interface InternshipLocationRepository: JpaRepository<InternshipLocation, Long>{
     fun findByLocationCompany(locationCompany: LocationCompany): List<InternshipLocation>
-
+    fun findByLocationCompanyId(locationCompanyId: Long): List<InternshipLocation>
 }
 
 @Repository

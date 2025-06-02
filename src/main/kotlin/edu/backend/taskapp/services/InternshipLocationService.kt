@@ -16,6 +16,7 @@ interface InternshipLocationService {
     fun create(internshipLocationInput: InternshipLocationInput): InternshipLocationOutput?
     fun update(internshipLocationInput: InternshipLocationInput): InternshipLocationOutput?
     fun deleteById(id: Long)
+    fun findByLocationId(locationId: Long): List<InternshipLocationOutput>
 }
 
 @Service
@@ -82,5 +83,10 @@ class AbstractInternshipLocationService(
         } else {
             throw NoSuchElementException("The internship location with the id: $id not found!")
         }
+    }
+
+    override fun findByLocationId(locationId: Long): List<InternshipLocationOutput> {
+        val results = internshipLocationRepository.findByLocationCompanyId(locationId)
+        return internshipLocationMapper.internshipLocationListToInternshipLocationOutputList(results)
     }
 }
