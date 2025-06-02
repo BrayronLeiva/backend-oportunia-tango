@@ -38,7 +38,7 @@ class InternshipLocationController(private val internshipLocationService: Intern
 
     @GetMapping("/location/{locationId}")
     @ResponseBody
-    fun findByLocationId(@PathVariable locationId: Long): List<InternshipLocationOutput> {
-        return internshipLocationService.findByLocationId(locationId)
+    fun findByLocationCompanyId(@PathVariable locationId: Long): List<InternshipLocationOutput> {
+        return internshipLocationService.findByLocationCompanyId(locationId)
     }
 }
