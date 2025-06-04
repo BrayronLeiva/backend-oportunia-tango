@@ -1,16 +1,21 @@
 package edu.backend.taskapp.webservices
 
+import edu.backend.taskapp.LoggedUser
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.services.StudentService
+import edu.backend.taskapp.services.UserService
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("\${url.students}")
-class StudentController(private val studentService: StudentService) {
+class StudentController(
+    private val studentService: StudentService,
+    private val userService: UserService
+) {
 
     @GetMapping
     @ResponseBody
@@ -49,5 +54,15 @@ class StudentController(private val studentService: StudentService) {
     @ResponseBody
     fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> {
         return studentService.findRecommendedStudentsByCompany(companyId)
+    }
+
+
+    @GetMapping("/me")
+    @ResponseBody
+    fun findUserStudent(): StudentOutput? {
+        val username = LoggedUser.get()
+        val user = userService.findByEmail(username)
+
+        return studentService.findByUserId(user?.id ?: throw Exception("No student found"))
     }
 }
