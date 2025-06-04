@@ -24,4 +24,5 @@ data class InternshipMatchResult(
     val internshipTitle: String,
     val score: Int,
     val reason: String
+    
 )

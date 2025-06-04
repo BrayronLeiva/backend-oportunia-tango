@@ -2,7 +2,10 @@ package edu.backend.taskapp.services.AIService
 
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.InternshipEvaluateOutput
+import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
+import edu.backend.taskapp.dtos.InternshipLocationOutput
 import edu.backend.taskapp.dtos.InternshipMatchResult
+import edu.backend.taskapp.dtos.InternshipOutput
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.services.AIService.AIStrategies.AIConnectionStrategy
@@ -18,8 +21,8 @@ interface AIService {
 
     fun recommendInternshipsForStudent(
         student: StudentOutput,
-        nearbyInternships: List<InternshipEvaluateOutput>
-    ): List<InternshipMatchResult>
+        nearbyInternships: List<InternshipLocationOutput>
+    ): List<InternshipLocationMatchOutput>
 }
 
 @Service
@@ -87,22 +90,23 @@ class AbstractAIService(
 
     override fun recommendInternshipsForStudent(
         student: StudentOutput,
-        nearbyInternships: List<InternshipEvaluateOutput>
-    ): List<InternshipMatchResult> {
+        nearbyInternships: List<InternshipLocationOutput>
+    ): List<InternshipLocationMatchOutput> {
 
-        return nearbyInternships.mapNotNull { internship ->
+        return nearbyInternships.mapNotNull { internshipLocation ->
 
-            val company = internship.company
+            val company = internshipLocation.locationCompany.company
+            val internship = internshipLocation.internship
             val prompt = generatePrompt(student, company, internship)
             val behaviour = "\"Eres un sistema experto en selección de pasantías.\""
             aiStrategy.make_request(prompt, behaviour)?.let { content ->
-                parseResponseForInternship(content, internship)
+                parseResponseForInternship(content, internshipLocation)
             }
         }
     }
 
 
-    private fun generatePrompt(student: StudentOutput, company: CompanyOutput, internship: InternshipEvaluateOutput): String {
+    private fun generatePrompt(student: StudentOutput, company: CompanyOutput, internship: InternshipOutput): String {
         return """
         Eres un sistema experto en orientación de pasantías. Evalúa si la siguiente pasantía es adecuada para el estudiante descrito, basándote en su experiencia, intereses y habilidades.
 
@@ -128,16 +132,17 @@ class AbstractAIService(
     """.trimIndent()
     }
 
-    private fun parseResponseForInternship(content: String, internship: InternshipEvaluateOutput): InternshipMatchResult {
+    private fun parseResponseForInternship(content: String, internshipLocation: InternshipLocationOutput): InternshipLocationMatchOutput {
         val scoreRegex = Regex("score:\\s*(\\d+)")
         val reasonRegex = Regex("reason:\\s*(.*)", RegexOption.DOT_MATCHES_ALL)
 
         val score = scoreRegex.find(content)?.groupValues?.get(1)?.toIntOrNull() ?: 0
         val reason = reasonRegex.find(content)?.groupValues?.get(1)?.trim() ?: "No se pudo obtener explicación"
 
-        return InternshipMatchResult(
-            internshipId = internship.idInternship!!,
-            internshipTitle = internship.details!!,
+        return InternshipLocationMatchOutput(
+            idInternshipLocation = internshipLocation.idInternshipLocation,
+            locationCompany = internshipLocation.locationCompany,
+            internship = internshipLocation.internship,
             score = score,
             reason = reason
         )

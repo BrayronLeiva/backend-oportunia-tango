@@ -1,6 +1,7 @@
 package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.dtos.InternshipInput
+import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
 import edu.backend.taskapp.dtos.InternshipMatchResult
 import edu.backend.taskapp.dtos.InternshipOutput
 import edu.backend.taskapp.dtos.LocationRequestDTO
@@ -63,15 +64,12 @@ class InternshipController(private val internshipService: InternshipService) {
     }
 
     /**
-     * WS to delete an Internship by id
-     * @param id to identify the internship
+     * WS to find one Internship by the id
+     * @param id to find Internships by location
+     * @return the Internships found by location
      */
-    @GetMapping("recommendations/{studentId}")
+    @GetMapping("locations/{id}")
     @ResponseBody
-     fun recommendInternshipsForStudent(
-        @PathVariable studentId: Long,
-        @RequestBody location: LocationRequestDTO
-    ): List<InternshipMatchResult>  {
-        return internshipService.findRecommendedInternshipsByStudent(studentId, location)
-    }
+    fun findByLocationId(@PathVariable id: Long) = internshipService.findByLocationId(id)
+
 }

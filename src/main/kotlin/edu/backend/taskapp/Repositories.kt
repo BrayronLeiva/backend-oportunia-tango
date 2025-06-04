@@ -59,7 +59,15 @@ interface CertificationRepository: JpaRepository<Certification, Long>
 interface QualificationRepository: JpaRepository<Qualification, Long>
 
 @Repository
-interface InternshipRepository: JpaRepository<Internship, Long>
+interface InternshipRepository: JpaRepository<Internship, Long>{
+    @Query("""
+        SELECT DISTINCT i
+        FROM Internship i
+        JOIN i.internshipLocations il
+        WHERE il.locationCompany.idLocationCompany = :locationId
+    """)
+    fun findByLocationCompanyId(@Param("locationId") locationId: Long): List<Internship>
+}
 
 @Repository
 interface CompanyRepository: JpaRepository<Company, Long>

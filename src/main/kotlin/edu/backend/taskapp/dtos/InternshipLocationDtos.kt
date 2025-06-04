@@ -10,6 +10,14 @@ data class InternshipLocationInput(
 data class InternshipLocationOutput(
     var idInternshipLocation: Long,
     var locationCompany: LocationCompanyOutput,
+    var internship: InternshipOutput
+)
+
+data class InternshipLocationMatchOutput(
+    var idInternshipLocation: Long,
+    var locationCompany: LocationCompanyOutput,
     var internship: InternshipOutput,
+    val score: Int,
+    val reason: String
     //var requests: List<RequestOutput>
 )

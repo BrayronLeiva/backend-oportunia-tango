@@ -6,6 +6,10 @@ import edu.backend.taskapp.mappers.InternshipLocationMapper
 import edu.backend.taskapp.InternshipLocationRepository
 import edu.backend.taskapp.InternshipRepository
 import edu.backend.taskapp.LocationCompanyRepository
+import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
+import edu.backend.taskapp.dtos.LocationRequestDTO
+import edu.backend.taskapp.mappers.CompanyMapper
+import edu.backend.taskapp.services.AIService.AIService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -16,6 +20,7 @@ interface InternshipLocationService {
     fun create(internshipLocationInput: InternshipLocationInput): InternshipLocationOutput?
     fun update(internshipLocationInput: InternshipLocationInput): InternshipLocationOutput?
     fun deleteById(id: Long)
+    fun findRecommendedInternshipsByStudent(id: Long,  locationRequest: LocationRequestDTO): List<InternshipLocationMatchOutput>
 }
 
 @Service
@@ -28,6 +33,10 @@ class AbstractInternshipLocationService(
     val internshipLocationRepository: InternshipLocationRepository,
     @Autowired
     val internshipLocationMapper: InternshipLocationMapper,
+    @Autowired
+    val studentService: StudentService,
+    @Autowired
+    val aiService: AIService
 ) : InternshipLocationService {
 
     override fun findAll(): List<InternshipLocationOutput>? {
@@ -82,5 +91,36 @@ class AbstractInternshipLocationService(
         } else {
             throw NoSuchElementException("The internship location with the id: $id not found!")
         }
+    }
+
+    /**
+     * Get recommended students by company
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun findRecommendedInternshipsByStudent(
+        studentId: Long,
+        locationRequest: LocationRequestDTO
+    ): List<InternshipLocationMatchOutput> {
+
+        val nearbyLocations = locationCompanyRepository.findLocationsNear(
+            locationRequest.latitude,
+            locationRequest.longitude,
+            radiusKm = 30.0
+        )
+
+        val studentDto = studentService.findById(studentId)
+
+        val internshipLocationList = nearbyLocations
+            .flatMap { location ->
+                internshipLocationRepository.findByLocationCompany(location)
+            }
+
+        val internshipLocationListOutput = internshipLocationMapper.internshipLocationListToInternshipLocationOutputList(
+            internshipLocationList
+        )
+
+        return aiService.recommendInternshipsForStudent(studentDto!!, internshipLocationListOutput)
     }
 }
