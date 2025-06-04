@@ -25,6 +25,10 @@ interface UserMapper {
         input: UserInput,
         @MappingTarget entity: User
     )
+    fun userOutputToUserInput(
+        output: UserOutput
+    ): UserInput
+
 
     // Optional if you use UserResult for login responses
     //fun userToUserResult(

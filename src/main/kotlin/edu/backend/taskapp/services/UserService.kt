@@ -11,9 +11,11 @@ import java.util.*
 interface UserService {
     fun findAll(): List<UserOutput>?
     fun findById(id: Long): UserOutput?
+    fun findByEmail(email: String): UserOutput?
     fun create(userInput: UserInput): UserOutput?
     fun update(userInput: UserInput): UserOutput?
     fun deleteById(id: Long)
+    fun convertUserOuputToUserInput(userOutput: UserOutput?): UserInput?
 }
 
 @Service
@@ -34,6 +36,14 @@ class AbstractUserService(
         val user = userRepository.findById(id)
         if (user.isEmpty) {
             throw NoSuchElementException("The user with the id: $id not found!")
+        }
+        return userMapper.userToUserOutput(user.get())
+    }
+
+    override fun findByEmail(email: String): UserOutput? {
+        val user = userRepository.findByEmail(email)
+        if (user.isEmpty) {
+            throw NoSuchElementException("The user with the id: $email not found!")
         }
         return userMapper.userToUserOutput(user.get())
     }
@@ -63,5 +73,9 @@ class AbstractUserService(
         } else {
             throw NoSuchElementException("The user with the id: $id not found!")
         }
+    }
+
+    override fun convertUserOuputToUserInput(userOutput: UserOutput?): UserInput? {
+        return userMapper.userOutputToUserInput(userOutput!!)
     }
 }

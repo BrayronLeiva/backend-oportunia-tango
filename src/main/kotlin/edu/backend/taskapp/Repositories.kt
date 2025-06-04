@@ -44,6 +44,8 @@ interface StudentRepository: JpaRepository<Student, Long> {
         WHERE c.idCompany = :companyId
     """)
     fun findStudentsRequestingByCompanyId(@Param("companyId") companyId: Long): List<Student>
+
+    fun findByUserId(userId: Long): Optional<Student>
 }
 
 @Repository

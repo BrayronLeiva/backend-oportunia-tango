@@ -1,16 +1,25 @@
 package edu.backend.taskapp.webservices
 
+import edu.backend.taskapp.InternshipRepository
+import edu.backend.taskapp.LoggedUser
 import edu.backend.taskapp.dtos.InternshipLocationInput
 import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
 import edu.backend.taskapp.dtos.InternshipLocationOutput
 import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.services.InternshipLocationService
+import edu.backend.taskapp.services.StudentService
+import edu.backend.taskapp.services.UserService
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("\${url.internshipLocations}")
-class InternshipLocationController(private val internshipLocationService: InternshipLocationService) {
+class InternshipLocationController(
+    private val internshipLocationService: InternshipLocationService,
+    private val userService: UserService,
+    private val studentService: StudentService
+) {
 
     @GetMapping
     @ResponseBody
@@ -44,12 +53,16 @@ class InternshipLocationController(private val internshipLocationService: Intern
         return internshipLocationService.findByLocationCompanyId(locationId)
     }
 
-    @GetMapping("recommendations/{studentId}")
+    @GetMapping("recommendations")
     @ResponseBody
     fun recommendInternshipsLocationsForStudent(
-        @PathVariable studentId: Long,
         @RequestBody location: LocationRequestDTO
     ): List<InternshipLocationMatchOutput>  {
-        return internshipLocationService.findRecommendedInternshipsByStudent(studentId, location)
+        val username = LoggedUser.get()
+
+        val user = userService.findByEmail(username)
+        val student = studentService.findByUserId(user?.id ?: throw Exception("No student found"))
+
+        return internshipLocationService.findRecommendedInternshipsByStudent(student!!.idStudent, location)
     }
 }

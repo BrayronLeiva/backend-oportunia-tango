@@ -8,8 +8,11 @@ import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.UserRepository
 import edu.backend.taskapp.dtos.InternshipMatchResult
 import edu.backend.taskapp.dtos.StudentMatchResult
+import edu.backend.taskapp.dtos.UserInput
 import edu.backend.taskapp.entities.Student
+import edu.backend.taskapp.entities.User
 import edu.backend.taskapp.mappers.CompanyMapper
+import edu.backend.taskapp.mappers.UserMapper
 import edu.backend.taskapp.services.AIService.AIService
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,6 +59,14 @@ interface StudentService {
      */
     fun getStudentsRequestingForCompany(companyId: Long): List<StudentOutput>
     fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult>
+
+    /**
+     * Get one Task by id
+     * @param id of the Task
+     * @return the Task found
+     */
+    fun findByUserId(userId: Long): StudentOutput?
+
 }
 
 @Service
@@ -71,7 +82,9 @@ class AbstractStudentService(
     @Autowired
     val companyMapper: CompanyMapper,
     @Autowired
-    val aiService: AIService
+    val aiService: AIService,
+    @Autowired
+    val userMapper: UserMapper
 
     ) : StudentService {
     /**
@@ -169,6 +182,24 @@ class AbstractStudentService(
         val studentsDtos = studentMapper.studentListToStudentOutputList(students)
 
         return aiService.matchStudentsWithCompany(companyDto, studentsDtos)
+    }
+
+
+    /**
+     * Get one Task by id
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(NoSuchElementException::class)
+    override fun findByUserId(userId: Long): StudentOutput? {
+
+        val student: Optional<Student> = studentRepository.findByUserId(userId)
+        if (student.isEmpty) {
+            throw NoSuchElementException(String.format("The student with the user id: %s not found!", userId))
+        }
+        return studentMapper.studentToStudentOutput(
+            student.get(),
+        )
     }
 
 }
