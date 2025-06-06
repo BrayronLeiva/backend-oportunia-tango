@@ -56,12 +56,14 @@ class InternshipLocationController(
     @GetMapping("recommendations")
     @ResponseBody
     fun recommendInternshipsLocationsForStudent(
-        @RequestBody location: LocationRequestDTO
+        @RequestParam lat: Double,
+        @RequestParam lng: Double
     ): List<InternshipLocationMatchOutput>  {
         val username = LoggedUser.get()
 
         val user = userService.findByEmail(username)
         val student = studentService.findByUserId(user?.id ?: throw Exception("No student found"))
+        val location = LocationRequestDTO(lat, lng)
 
         return internshipLocationService.findRecommendedInternshipsByStudent(student!!.idStudent, location)
     }
