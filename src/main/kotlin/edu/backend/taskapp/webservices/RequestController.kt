@@ -48,5 +48,14 @@ class RequestController(
         requestService.deleteById(id)
     }
 
+    /**
+     * WS to find one Internship by the id
+     * @param id to find Internships by location
+     * @return the Internships found by location
+     */
+    @GetMapping("students/{id}")
+    @ResponseBody
+    fun findByStudentId(@PathVariable id: Long) = requestService.findByStudentId(id)
+
 
 }

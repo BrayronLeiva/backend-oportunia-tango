@@ -105,7 +105,9 @@ interface InternshipLocationRepository: JpaRepository<InternshipLocation, Long>{
 interface RatingCompanyStudentRepository: JpaRepository<RatingCompanyStudent, Long>
 
 @Repository
-interface RequestRepository: JpaRepository<Request, Long>
+interface RequestRepository: JpaRepository<Request, Long>{
+    fun findByStudent_IdStudent(studentId: Long): List<Request>
+}
 
 @Repository
 interface RoleRepository: JpaRepository<Role, Long> {
