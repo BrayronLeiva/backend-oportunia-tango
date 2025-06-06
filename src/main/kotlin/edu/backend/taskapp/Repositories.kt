@@ -107,6 +107,7 @@ interface RatingCompanyStudentRepository: JpaRepository<RatingCompanyStudent, Lo
 @Repository
 interface RequestRepository: JpaRepository<Request, Long>{
     fun findByStudent_IdStudent(studentId: Long): List<Request>
+    fun existsRequestByStudent_IdStudentAndInternshipLocation_IdInternshipLocation(studentId: Long, internshipLocationId: Long): Boolean
 }
 
 @Repository

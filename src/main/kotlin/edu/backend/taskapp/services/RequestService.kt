@@ -7,7 +7,9 @@ import edu.backend.taskapp.mappers.RequestMapper
 import edu.backend.taskapp.RequestRepository
 import edu.backend.taskapp.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 interface RequestService {
@@ -46,6 +48,17 @@ class AbstractRequestService(
     }
 
     override fun create(requestInput: RequestInput): RequestOutput? {
+
+
+        if (requestRepository.existsRequestByStudent_IdStudentAndInternshipLocation_IdInternshipLocation
+                (requestInput.studentId!!,
+                requestInput.internshipLocationId!!)){
+            throw ResponseStatusException(
+                HttpStatus.CONFLICT, // <- Código HTTP 409
+                "Ya existe una solicitud para esta locación de pasantía"
+            )
+        }
+
         val student = studentRepository.findById(requestInput.studentId!!)
             .orElseThrow { NoSuchElementException("Student with ID ${requestInput.studentId} not found") }
 
