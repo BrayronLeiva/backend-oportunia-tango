@@ -1,9 +1,11 @@
 package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.LoggedUser
+import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
+import edu.backend.taskapp.services.CompanyService
 import edu.backend.taskapp.services.StudentService
 import edu.backend.taskapp.services.UserService
 import kotlinx.coroutines.runBlocking
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("\${url.students}")
 class StudentController(
     private val studentService: StudentService,
+    private val companyService: CompanyService,
     private val userService: UserService
 ) {
 
@@ -50,10 +53,30 @@ class StudentController(
      * @param companyId the company to find students
      * @return the list of recommendations
      */
-    @GetMapping("/recommendations/{companyId}")
+    @GetMapping("/recommendations")
     @ResponseBody
-    fun matchStudents(@PathVariable companyId: Long): List<StudentMatchResult> {
-        return studentService.findRecommendedStudentsByCompany(companyId)
+    fun matchStudents(): List<StudentMatchResult> {
+        val username = LoggedUser.get()
+        val user = userService.findByEmail(username)
+        val company = companyService.findByUserId(user?.id ?: throw Exception("No company found"))
+
+        return studentService.findRecommendedStudentsByCompany(company!!.idCompany)
+    }
+
+
+    /**
+     * WS to find the recommend students
+     * @param companyId the company to find students
+     * @return the list of recommendations
+     */
+    @GetMapping("/company/logged")
+    @ResponseBody
+    fun findStudentsRequesting(): List<StudentOutput> {
+        val username = LoggedUser.get()
+        val user = userService.findByEmail(username)
+        val company = companyService.findByUserId(user?.id ?: throw Exception("No company found"))
+
+        return studentService.findStudentsRequestingByCompany(company!!.idCompany)
     }
 
 

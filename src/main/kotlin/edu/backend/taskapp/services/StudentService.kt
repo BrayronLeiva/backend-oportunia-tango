@@ -59,6 +59,7 @@ interface StudentService {
      */
     fun getStudentsRequestingForCompany(companyId: Long): List<StudentOutput>
     fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult>
+    fun findStudentsRequestingByCompany(id: Long): List<StudentOutput>
 
     /**
      * Get one Task by id
@@ -182,6 +183,20 @@ class AbstractStudentService(
         val studentsDtos = studentMapper.studentListToStudentOutputList(students)
 
         return aiService.matchStudentsWithCompany(companyDto, studentsDtos)
+    }
+
+
+    /**
+     * Get recommended students by company
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun findStudentsRequestingByCompany(id: Long): List<StudentOutput> {
+        val company = companyRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Company $id not found") }
+
+        return studentMapper.studentListToStudentOutputList(studentRepository.findStudentsRequestingByCompanyId(id))
     }
 
 

@@ -83,8 +83,13 @@ class AbstractAIService(
         return StudentMatchResult(
             idStudent = student.idStudent,
             nameStudent = student.nameStudent,
+            identification = student.identification,
+            personalInfo = student.personalInfo,
+            experience = student.experience,
+            ratingStudent = student.ratingStudent,
+            user = student.user,
+            reason = reason,
             score = score,
-            reason = reason
         )
     }
 

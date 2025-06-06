@@ -72,7 +72,9 @@ interface InternshipRepository: JpaRepository<Internship, Long>{
 }
 
 @Repository
-interface CompanyRepository: JpaRepository<Company, Long>
+interface CompanyRepository: JpaRepository<Company, Long>{
+    fun findByUserId(userId: Long): Optional<Company>
+}
 
 @Repository
 interface LocationCompanyRepository: JpaRepository<LocationCompany, Long> {

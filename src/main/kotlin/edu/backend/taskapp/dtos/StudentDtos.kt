@@ -20,7 +20,7 @@ data class StudentOutput(
     var personalInfo: String,
     var experience: String,
     var ratingStudent: Double,
-    var user: UserOutput,
+    var user: UserOutput
     //var qualifications: List<QualificationOutput>,
     //var requests: List<RequestOutput>,
     //var ratings: List<RatingCompanyStudentOutput>,
@@ -30,6 +30,11 @@ data class StudentOutput(
 data class StudentMatchResult(
     val idStudent: Long,
     val nameStudent: String,
+    var identification: String,
+    var personalInfo: String,
+    var experience: String,
+    var ratingStudent: Double,
+    var user: UserOutput,
     val score: Int,
     val reason: String
 )
