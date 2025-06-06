@@ -7,6 +7,10 @@ data class RequestInput(
     var internshipLocationId: Long? = null
 )
 
+data class RequestStudentInput(
+    var internshipLocationId: Long? = null
+)
+
 data class RequestOutput(
     var idRequest: Long,
     var state: Boolean?,

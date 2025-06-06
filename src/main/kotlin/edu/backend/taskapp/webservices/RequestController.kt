@@ -1,14 +1,22 @@
 package edu.backend.taskapp.webservices
 
+import edu.backend.taskapp.LoggedUser
 import edu.backend.taskapp.dtos.RequestInput
 import edu.backend.taskapp.dtos.RequestOutput
+import edu.backend.taskapp.dtos.RequestStudentInput
 import edu.backend.taskapp.services.RequestService
+import edu.backend.taskapp.services.StudentService
+import edu.backend.taskapp.services.UserService
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("\${url.requests}")
-class RequestController(private val requestService: RequestService) {
+class RequestController(
+    private val requestService: RequestService,
+    private val userService: UserService,
+    private val studentService: StudentService
+) {
 
     @GetMapping
     @ResponseBody
@@ -20,8 +28,12 @@ class RequestController(private val requestService: RequestService) {
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun create(@RequestBody requestInput: RequestInput): RequestOutput? {
-        return requestService.create(requestInput)
+    fun create(@RequestBody requestStudentInput: RequestStudentInput): RequestOutput? {
+        val username = LoggedUser.get()
+        val user = userService.findByEmail(username)
+        val studentId = studentService.findByUserId(user?.id ?: throw Exception("No student found"))?.idStudent
+
+        return requestService.create(RequestInput(0,false, studentId, requestStudentInput.internshipLocationId))
     }
 
     @PutMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -35,4 +47,6 @@ class RequestController(private val requestService: RequestService) {
     fun deleteById(@PathVariable id: Long) {
         requestService.deleteById(id)
     }
+
+
 }
