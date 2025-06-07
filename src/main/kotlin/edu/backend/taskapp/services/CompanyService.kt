@@ -99,12 +99,13 @@ class AbstractCompanyService(
 
         val company: Optional<Company> = companyRepository.findByUserId(userId)
         if (company.isEmpty) {
-            throw NoSuchElementException(String.format("The student with the user id: %s not found!", userId))
+            throw NoSuchElementException(String.format("The company with the user id: %s not found!", userId))
         }
         return companyMapper.companyToCompanyOutput(
             company.get(),
         )
     }
+
 
 
 

@@ -1,17 +1,23 @@
 package edu.backend.taskapp.webservices
 
+import edu.backend.taskapp.LoggedUser
 import edu.backend.taskapp.dtos.CompanyInput
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.StudentMatchResult
+import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.services.AIService.AIService
 import edu.backend.taskapp.services.CompanyService
+import edu.backend.taskapp.services.UserService
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("\${url.companies}")
-class CompanyController(private val companyService: CompanyService) {
+class CompanyController(
+    private val companyService: CompanyService,
+    private val userService: UserService
+    ) {
 
     /**
      * WS to find all elements of type Company
@@ -60,6 +66,15 @@ class CompanyController(private val companyService: CompanyService) {
     @ResponseBody
     fun deleteById(@PathVariable id: Long) {
         companyService.deleteById(id)
+    }
+
+    @GetMapping("/me")
+    @ResponseBody
+    fun findUserCompany(): CompanyOutput? {
+        val username = LoggedUser.get()
+        val user = userService.findByEmail(username)
+
+        return companyService.findByUserId(user?.id ?: throw Exception("No company found"))
     }
 
 
