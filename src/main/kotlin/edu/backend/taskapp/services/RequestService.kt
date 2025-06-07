@@ -19,6 +19,7 @@ interface RequestService {
     fun update(requestInput: RequestInput): RequestOutput?
     fun deleteById(id: Long)
     fun findByStudentId(id: Long): List<RequestOutput>?
+    fun findByStudentIdAndCompanyId(idStudent: Long, idCompany: Long): List<RequestOutput>
 }
 
 @Service
@@ -99,6 +100,15 @@ class AbstractRequestService(
         val requests = requestRepository.findByStudent_IdStudent(id)
         if (requests.isEmpty()) {
             throw NoSuchElementException("The request with the student id: $id not found!")
+        }
+        return requestMapper.requestListToRequestOutputList(requests)
+    }
+
+
+    override fun findByStudentIdAndCompanyId(idStudent: Long, idCompany: Long): List<RequestOutput> {
+        val requests = requestRepository.findByStudentIdAndCompanyId(idStudent, idCompany)
+        if (requests.isEmpty()) {
+            throw NoSuchElementException("The requests with the student id: $idStudent and the company id $idCompany not found!")
         }
         return requestMapper.requestListToRequestOutputList(requests)
     }
