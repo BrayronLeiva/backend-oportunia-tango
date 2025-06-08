@@ -20,6 +20,8 @@ data class LocationCompanyOutput(
     //var internshipLocations: List<InternshipLocationOutput>
 )
 
+
+
 data class LocationRequestDTO(
     val latitude: Double,
     val longitude: Double

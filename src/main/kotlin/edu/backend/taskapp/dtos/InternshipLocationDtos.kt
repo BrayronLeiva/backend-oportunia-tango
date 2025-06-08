@@ -13,6 +13,14 @@ data class InternshipLocationOutput(
     var internship: InternshipOutput
 )
 
+data class InternshipLocationFlagOutput(
+    var idInternshipLocation: Long,
+    var locationCompany: LocationCompanyOutput,
+    var internship: InternshipOutput,
+    val requested: Boolean
+    
+)
+
 data class InternshipLocationMatchOutput(
     var idInternshipLocation: Long,
     var locationCompany: LocationCompanyOutput,

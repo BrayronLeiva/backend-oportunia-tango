@@ -6,9 +6,14 @@ import edu.backend.taskapp.mappers.InternshipLocationMapper
 import edu.backend.taskapp.InternshipLocationRepository
 import edu.backend.taskapp.InternshipRepository
 import edu.backend.taskapp.LocationCompanyRepository
+import edu.backend.taskapp.dtos.InternshipLocationFlagOutput
 import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
+import edu.backend.taskapp.dtos.InternshipOutput
+import edu.backend.taskapp.dtos.LocationCompanyOutput
 import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.mappers.CompanyMapper
+import edu.backend.taskapp.mappers.InternshipMapper
+import edu.backend.taskapp.mappers.LocationCompanyMapper
 import edu.backend.taskapp.services.AIService.AIService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -22,6 +27,7 @@ interface InternshipLocationService {
     fun deleteById(id: Long)
     fun findByLocationCompanyId(id: Long): List<InternshipLocationOutput>
     fun findRecommendedInternshipsByStudent(id: Long,  locationRequest: LocationRequestDTO): List<InternshipLocationMatchOutput>
+    fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput>
 }
 
 @Service
@@ -35,7 +41,13 @@ class AbstractInternshipLocationService(
     @Autowired
     val internshipLocationMapper: InternshipLocationMapper,
     @Autowired
+    val locationCompanyMapper: LocationCompanyMapper,
+    @Autowired
+    val internshipMapper: InternshipMapper,
+    @Autowired
     val studentService: StudentService,
+    @Autowired
+    val requestService: RequestService,
     @Autowired
     val aiService: AIService
 ) : InternshipLocationService {
@@ -128,5 +140,26 @@ class AbstractInternshipLocationService(
         )
 
         return aiService.recommendInternshipsForStudent(studentDto!!, internshipLocationListOutput)
+    }
+
+
+    override fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput> {
+        val interLocations = internshipLocationRepository.findByLocationCompany_IdLocationCompany(idLocationCompany)
+        val studentsRequests = requestService.findByStudentId(idStudent)
+
+        val studentRequestsIdsInternLocations = studentsRequests
+            ?.map { it.internshipLocation.idInternshipLocation }
+            ?.toSet()
+        
+        
+        return interLocations.map { il ->
+            InternshipLocationFlagOutput(
+                idInternshipLocation = il.idInternshipLocation!!,
+                locationCompany = locationCompanyMapper.locationCompanyToLocationCompanyOutput(il.locationCompany),
+                internship = internshipMapper.internshipToInternshipOutput(il.internship),
+                requested = studentRequestsIdsInternLocations?.contains(il.idInternshipLocation)!!
+            )
+        }
+
     }
 }

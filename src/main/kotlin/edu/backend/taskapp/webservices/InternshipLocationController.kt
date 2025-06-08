@@ -2,6 +2,7 @@ package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.InternshipRepository
 import edu.backend.taskapp.LoggedUser
+import edu.backend.taskapp.dtos.InternshipLocationFlagOutput
 import edu.backend.taskapp.dtos.InternshipLocationInput
 import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
 import edu.backend.taskapp.dtos.InternshipLocationOutput
@@ -67,4 +68,18 @@ class InternshipLocationController(
 
         return internshipLocationService.findRecommendedInternshipsByStudent(student!!.idStudent, location)
     }
+
+    @GetMapping("/location/flag-byStudent/{locationId}")
+    @ResponseBody
+    fun findByLocationFlagByStudentByCompanyId(@PathVariable locationId: Long): List<InternshipLocationFlagOutput> {
+        val username = LoggedUser.get()
+
+        val user = userService.findByEmail(username)
+        val student = studentService.findByUserId(user?.id ?: throw Exception("No student found"))
+
+        return internshipLocationService.findByLocationCompanyIdAndRequestFlagByStudent(locationId,
+            student?.idStudent ?: throw Exception("No student found")
+        )
+    }
+
 }
