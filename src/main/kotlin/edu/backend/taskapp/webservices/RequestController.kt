@@ -74,5 +74,14 @@ class RequestController(
         return requestService.findByStudentIdAndCompanyId(idStudent, company!!.idCompany)
     }
 
+    @DeleteMapping("/internship-locations/{id}")
+    @ResponseBody
+    fun deleteByInternshipLocationIdAndStudentId(@PathVariable id: Long) {
+        val username = LoggedUser.get()
+        val user = userService.findByEmail(username)
+        val studentId = studentService.findByUserId(user?.id ?: throw Exception("No student found"))?.idStudent
+
+        requestService.deleteByInternshipLocationIdAndStundentId(id, studentId!!)
+    }
 
 }

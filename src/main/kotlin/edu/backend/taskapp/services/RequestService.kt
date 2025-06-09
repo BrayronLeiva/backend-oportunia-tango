@@ -9,6 +9,7 @@ import edu.backend.taskapp.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
@@ -20,6 +21,7 @@ interface RequestService {
     fun deleteById(id: Long)
     fun findByStudentId(id: Long): List<RequestOutput>?
     fun findByStudentIdAndCompanyId(idStudent: Long, idCompany: Long): List<RequestOutput>
+    fun deleteByInternshipLocationIdAndStundentId(idInternshipLocation: Long, idStudent: Long)
 }
 
 @Service
@@ -92,6 +94,15 @@ class AbstractRequestService(
             requestRepository.deleteById(id)
         } else {
             throw NoSuchElementException("The request with the id: $id not found!")
+        }
+    }
+
+    override fun deleteByInternshipLocationIdAndStundentId(idInternshipLocation: Long, idStudent: Long) {
+        val search = requestRepository.findByInternshipLocation_IdInternshipLocationAndStudent_IdStudent(idInternshipLocation, idStudent)
+        if (!search.isEmpty) {
+            requestRepository.deleteById(search.get().idRequest!!)
+        } else {
+            throw NoSuchElementException("The request with the internloca id: $idInternshipLocation and student id $idStudent not found!")
         }
     }
 

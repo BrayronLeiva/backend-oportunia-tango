@@ -119,6 +119,9 @@ interface RequestRepository: JpaRepository<Request, Long>{
         @Param("studentId") studentId: Long,
         @Param("companyId") companyId: Long
     ): List<Request>
+
+    fun deleteByInternshipLocation_IdInternshipLocationAndStudent_IdStudent(idInternshipLocation: Long, idStudent: Long): Unit
+    fun findByInternshipLocation_IdInternshipLocationAndStudent_IdStudent(idInternshipLocation: Long, internshipLocation: Long): Optional<Request>
 }
 
 @Repository
