@@ -28,6 +28,7 @@ interface InternshipLocationService {
     fun findByLocationCompanyId(id: Long): List<InternshipLocationOutput>
     fun findRecommendedInternshipsByStudent(id: Long,  locationRequest: LocationRequestDTO): List<InternshipLocationMatchOutput>
     fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput>
+    fun findByRequestFlagByStudent(idStudent: Long): List<InternshipLocationFlagOutput>
 }
 
 @Service
@@ -145,13 +146,43 @@ class AbstractInternshipLocationService(
 
     override fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput> {
         val interLocations = internshipLocationRepository.findByLocationCompany_IdLocationCompany(idLocationCompany)
-        val studentsRequests = requestService.findByStudentId(idStudent)
+        val studentRequests = try {
+            requestService.findByStudentId(idStudent)
+        } catch (e: Exception) {
+            emptyList()
+        }
 
-        val studentRequestsIdsInternLocations = studentsRequests
+        val studentRequestsIdsInternLocations = studentRequests
             ?.map { it.internshipLocation.idInternshipLocation }
             ?.toSet()
         
         
+        return interLocations.map { il ->
+            InternshipLocationFlagOutput(
+                idInternshipLocation = il.idInternshipLocation!!,
+                locationCompany = locationCompanyMapper.locationCompanyToLocationCompanyOutput(il.locationCompany),
+                internship = internshipMapper.internshipToInternshipOutput(il.internship),
+                requested = studentRequestsIdsInternLocations?.contains(il.idInternshipLocation)!!
+            )
+        }
+
+    }
+
+    override fun findByRequestFlagByStudent(idStudent: Long): List<InternshipLocationFlagOutput> {
+        val interLocations = internshipLocationRepository.findAll()
+        val studentRequests = try {
+            requestService.findByStudentId(idStudent)
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+
+
+        val studentRequestsIdsInternLocations = studentRequests
+            ?.mapNotNull { it.internshipLocation.idInternshipLocation }
+            ?.toSet()
+
+
         return interLocations.map { il ->
             InternshipLocationFlagOutput(
                 idInternshipLocation = il.idInternshipLocation!!,

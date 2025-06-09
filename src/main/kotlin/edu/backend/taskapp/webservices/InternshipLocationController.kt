@@ -82,4 +82,16 @@ class InternshipLocationController(
         )
     }
 
+    @GetMapping("/flag/student")
+    @ResponseBody
+    fun findByLocationFlagByStudent(): List<InternshipLocationFlagOutput> {
+        val username = LoggedUser.get()
+
+        val user = userService.findByEmail(username)
+        val student = studentService.findByUserId(user?.id ?: throw Exception("No student found"))
+
+        return internshipLocationService.findByRequestFlagByStudent(student?.idStudent ?: throw Exception("No student found")
+        )
+    }
+
 }
