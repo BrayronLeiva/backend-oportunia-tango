@@ -14,6 +14,8 @@ import edu.backend.taskapp.entities.Student
 import edu.backend.taskapp.entities.Request
 import edu.backend.taskapp.entities.Role
 import edu.backend.taskapp.entities.User
+import edu.backend.taskapp.entities.UserRole
+import edu.backend.taskapp.entities.UserRoleId
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -131,3 +133,6 @@ interface RoleRepository: JpaRepository<Role, Long> {
 
 @Repository
 interface PrivilegeRepository: JpaRepository<Privilege, Long>
+
+@Repository
+interface UserRoleRepository: JpaRepository<UserRole, UserRoleId>

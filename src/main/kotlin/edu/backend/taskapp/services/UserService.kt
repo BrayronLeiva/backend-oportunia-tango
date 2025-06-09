@@ -5,6 +5,7 @@ import edu.backend.taskapp.dtos.UserOutput
 import edu.backend.taskapp.mappers.UserMapper
 import edu.backend.taskapp.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -23,7 +24,8 @@ class AbstractUserService(
     @Autowired
     val userRepository: UserRepository,
     @Autowired
-    val userMapper: UserMapper
+    val userMapper: UserMapper,
+    val passwordEncoder: BCryptPasswordEncoder
 ) : UserService {
 
     override fun findAll(): List<UserOutput>? {
@@ -50,20 +52,24 @@ class AbstractUserService(
 
     override fun create(userInput: UserInput): UserOutput? {
         val user = userMapper.userInputToUser(userInput)
+        user.password = passwordEncoder.encode(userInput.password)
         return userMapper.userToUserOutput(
             userRepository.save(user)
         )
     }
 
     override fun update(userInput: UserInput): UserOutput? {
-        val user = userRepository.findById(userInput.id!!)
-        if (user.isEmpty) {
-            throw NoSuchElementException("The user with the id: ${userInput.id} not found!")
+        val existingUser = userRepository.findById(userInput.id!!)
+            .orElseThrow { NoSuchElementException("The user with the id: ${userInput.id} not found!") }
+
+        userMapper.userInputToUser(userInput, existingUser)
+
+        if (!passwordEncoder.matches(userInput.password, existingUser.password)) {
+            existingUser.password = passwordEncoder.encode(userInput.password)
         }
-        val updatedUser = user.get()
-        userMapper.userInputToUser(userInput, updatedUser)
+
         return userMapper.userToUserOutput(
-            userRepository.save(updatedUser)
+            userRepository.save(existingUser)
         )
     }
 
