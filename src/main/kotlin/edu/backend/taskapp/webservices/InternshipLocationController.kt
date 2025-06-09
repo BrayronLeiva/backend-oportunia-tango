@@ -4,6 +4,7 @@ import edu.backend.taskapp.InternshipRepository
 import edu.backend.taskapp.LoggedUser
 import edu.backend.taskapp.dtos.InternshipLocationFlagOutput
 import edu.backend.taskapp.dtos.InternshipLocationInput
+import edu.backend.taskapp.dtos.InternshipLocationMatchFlagOutput
 import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
 import edu.backend.taskapp.dtos.InternshipLocationOutput
 import edu.backend.taskapp.dtos.LocationRequestDTO
@@ -92,6 +93,21 @@ class InternshipLocationController(
 
         return internshipLocationService.findByRequestFlagByStudent(student?.idStudent ?: throw Exception("No student found")
         )
+    }
+
+    @GetMapping("recommendations/flag")
+    @ResponseBody
+    fun recommendInternshipsLocationsFlagForStudent(
+        @RequestParam lat: Double,
+        @RequestParam lng: Double
+    ): List<InternshipLocationMatchFlagOutput>  {
+        val username = LoggedUser.get()
+
+        val user = userService.findByEmail(username)
+        val student = studentService.findByUserId(user?.id ?: throw Exception("No student found"))
+        val location = LocationRequestDTO(lat, lng)
+
+        return internshipLocationService.findRecommendedInternshipsFlagByStudent(student!!.idStudent, location)
     }
 
 }

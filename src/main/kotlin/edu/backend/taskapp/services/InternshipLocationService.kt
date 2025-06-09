@@ -7,6 +7,7 @@ import edu.backend.taskapp.InternshipLocationRepository
 import edu.backend.taskapp.InternshipRepository
 import edu.backend.taskapp.LocationCompanyRepository
 import edu.backend.taskapp.dtos.InternshipLocationFlagOutput
+import edu.backend.taskapp.dtos.InternshipLocationMatchFlagOutput
 import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
 import edu.backend.taskapp.dtos.InternshipOutput
 import edu.backend.taskapp.dtos.LocationCompanyOutput
@@ -29,6 +30,7 @@ interface InternshipLocationService {
     fun findRecommendedInternshipsByStudent(id: Long,  locationRequest: LocationRequestDTO): List<InternshipLocationMatchOutput>
     fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput>
     fun findByRequestFlagByStudent(idStudent: Long): List<InternshipLocationFlagOutput>
+    fun findRecommendedInternshipsFlagByStudent(studentId: Long, locationRequest: LocationRequestDTO): List<InternshipLocationMatchFlagOutput>
 }
 
 @Service
@@ -144,6 +146,59 @@ class AbstractInternshipLocationService(
     }
 
 
+    /**
+     * Get recommended students by company
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun findRecommendedInternshipsFlagByStudent(
+        studentId: Long,
+        locationRequest: LocationRequestDTO
+    ): List<InternshipLocationMatchFlagOutput> {
+
+        val nearbyLocations = locationCompanyRepository.findLocationsNear(
+            locationRequest.latitude,
+            locationRequest.longitude,
+            radiusKm = 30.0
+        )
+
+        val studentDto = studentService.findById(studentId)
+
+        val internshipLocationList = nearbyLocations
+            .flatMap { location ->
+                internshipLocationRepository.findByLocationCompany(location)
+            }
+
+        val internshipLocationListOutput = internshipLocationMapper.internshipLocationListToInternshipLocationOutputList(
+            internshipLocationList
+        )
+
+        val matchInternships = aiService.recommendInternshipsForStudent(studentDto!!, internshipLocationListOutput)
+
+        val studentRequests = try {
+            requestService.findByStudentId(studentId)
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        val studentRequestsIdsInternLocations = studentRequests
+            ?.map { it.internshipLocation.idInternshipLocation }
+            ?.toSet()
+
+
+        return matchInternships.map { il ->
+            InternshipLocationMatchFlagOutput(
+                idInternshipLocation = il.idInternshipLocation,
+                locationCompany = il.locationCompany,
+                internship = il.internship,
+                score = il.score,
+                reason = il.reason,
+                requested = studentRequestsIdsInternLocations?.contains(il.idInternshipLocation)!!
+            )
+        }
+    }
+
     override fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput> {
         val interLocations = internshipLocationRepository.findByLocationCompany_IdLocationCompany(idLocationCompany)
         val studentRequests = try {
@@ -175,7 +230,6 @@ class AbstractInternshipLocationService(
         } catch (e: Exception) {
             emptyList()
         }
-
 
 
         val studentRequestsIdsInternLocations = studentRequests

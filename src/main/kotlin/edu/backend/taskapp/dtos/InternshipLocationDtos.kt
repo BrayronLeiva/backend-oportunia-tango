@@ -29,3 +29,12 @@ data class InternshipLocationMatchOutput(
     val reason: String
     //var requests: List<RequestOutput>
 )
+data class InternshipLocationMatchFlagOutput(
+    var idInternshipLocation: Long,
+    var locationCompany: LocationCompanyOutput,
+    var internship: InternshipOutput,
+    val score: Int,
+    val reason: String,
+    val requested: Boolean
+    //var requests: List<RequestOutput>
+)
