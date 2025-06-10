@@ -38,3 +38,16 @@ data class StudentMatchResult(
     val score: Int,
     val reason: String
 )
+
+data class StudentQualificationsOutput(
+    var idStudent: Long,
+    var nameStudent: String,
+    var identification: String,
+    var personalInfo: String,
+    var experience: String,
+    var ratingStudent: Double,
+    var user: UserOutput,
+    var qualifications: List<QualificationOutput>
+    //var requests: List<RequestOutput>,
+    //var ratings: List<RatingCompanyStudentOutput>,
+)

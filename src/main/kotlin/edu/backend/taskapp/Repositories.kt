@@ -136,3 +136,4 @@ interface PrivilegeRepository: JpaRepository<Privilege, Long>
 
 @Repository
 interface UserRoleRepository: JpaRepository<UserRole, UserRoleId>
+

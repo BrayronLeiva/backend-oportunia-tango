@@ -6,8 +6,10 @@ import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.mappers.StudentMapper
 import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.UserRepository
+import edu.backend.taskapp.dtos.InternshipLocationFlagOutput
 import edu.backend.taskapp.dtos.InternshipMatchResult
 import edu.backend.taskapp.dtos.StudentMatchResult
+import edu.backend.taskapp.dtos.StudentQualificationsOutput
 import edu.backend.taskapp.dtos.UserInput
 import edu.backend.taskapp.entities.Student
 import edu.backend.taskapp.entities.User
@@ -60,6 +62,7 @@ interface StudentService {
     fun getStudentsRequestingForCompany(companyId: Long): List<StudentOutput>
     fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult>
     fun findStudentsRequestingByCompany(id: Long): List<StudentOutput>
+    fun findStudentsWithQualificationsRequestingByCompany(id: Long): List<StudentQualificationsOutput>
 
     /**
      * Get one Task by id
@@ -217,4 +220,18 @@ class AbstractStudentService(
         )
     }
 
+    /**
+     * Get recommended students by company
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(java.util.NoSuchElementException::class)
+    override fun findStudentsWithQualificationsRequestingByCompany(id: Long): List<StudentQualificationsOutput> {
+        val company = companyRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Company $id not found") }
+
+        val students = studentRepository.findStudentsRequestingByCompanyId(id)
+
+        return studentMapper.studentListToStudentQualificationsOutputList(students)
+    }
 }

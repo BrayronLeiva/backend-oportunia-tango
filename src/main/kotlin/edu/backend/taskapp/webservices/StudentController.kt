@@ -5,6 +5,7 @@ import edu.backend.taskapp.dtos.LocationRequestDTO
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
+import edu.backend.taskapp.dtos.StudentQualificationsOutput
 import edu.backend.taskapp.services.CompanyService
 import edu.backend.taskapp.services.StudentService
 import edu.backend.taskapp.services.UserService
@@ -88,4 +89,21 @@ class StudentController(
 
         return studentService.findByUserId(user?.id ?: throw Exception("No student found"))
     }
+
+    /**
+     * WS to find the recommend students
+     * @param companyId the company to find students
+     * @return the list of recommendations
+     */
+    @GetMapping("/qualifications/company")
+    @ResponseBody
+    fun findStudentsWithTheirQualificationsRequesting(): List<StudentQualificationsOutput> {
+        val username = LoggedUser.get()
+        val user = userService.findByEmail(username)
+        val company = companyService.findByUserId(user?.id ?: throw Exception("No company found"))
+
+        return studentService.findStudentsWithQualificationsRequestingByCompany(company!!.idCompany)
+    }
+
+
 }
