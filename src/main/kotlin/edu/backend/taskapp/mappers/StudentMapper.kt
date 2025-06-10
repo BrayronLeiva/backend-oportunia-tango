@@ -2,6 +2,7 @@ package edu.backend.taskapp.mappers
 
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
+import edu.backend.taskapp.dtos.StudentQualificationsOutput
 import edu.backend.taskapp.entities.Qualification
 import edu.backend.taskapp.entities.RatingCompanyStudent
 import edu.backend.taskapp.entities.Request
@@ -40,4 +41,8 @@ interface StudentMapper {
             user = user,
         )
     }
+
+    fun studentListToStudentQualificationsOutputList(
+        students: List<Student>
+    ): List<StudentQualificationsOutput>
 }

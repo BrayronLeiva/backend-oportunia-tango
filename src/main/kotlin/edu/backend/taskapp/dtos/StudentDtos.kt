@@ -38,3 +38,21 @@ data class StudentMatchResult(
     val score: Int,
     val reason: String
 )
+
+data class StudentQualificationsOutput(
+    var idStudent: Long,
+    var nameStudent: String,
+    var identification: String,
+    var personalInfo: String,
+    var experience: String,
+    var ratingStudent: Double,
+    var user: UserOutput,
+    val imageProfile: String,
+    var qualifications: List<QualificationOutput>
+)
+
+data class StudentHomeOutput(
+    var idStudent: Long,
+    var homeLatitude: String,
+    var homeLongitude: String
+)

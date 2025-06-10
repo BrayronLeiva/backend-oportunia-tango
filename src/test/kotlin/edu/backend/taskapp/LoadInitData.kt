@@ -80,6 +80,12 @@ class LoadInitData(
     //TEST DE CERTIFICATIONS
 
     @Test
+    fun `findAll students`() {
+        val certs = studentRepository.findAll()
+        Assertions.assertEquals(3, certs.size)
+    }
+
+    @Test
     fun `findAll returns the expected certifications`() {
         val certs = certificationRepository.findAll()
         Assertions.assertEquals(3, certs.size)
@@ -464,6 +470,9 @@ class LoadInitData(
             personalInfo = "Some info",
             experience = "Some experience",
             ratingStudent = 0.0,
+            imageProfile = "",
+            homeLatitude = 1.0,
+            homeLongitude = 1.0,
             user = user
         )
 
