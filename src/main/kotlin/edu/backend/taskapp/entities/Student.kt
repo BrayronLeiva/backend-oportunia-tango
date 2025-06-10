@@ -36,7 +36,7 @@ data class Student(
 
     var experience: String,
 
-    val ratingStudent: Double,
+    var ratingStudent: Double,
 
 
     // Entity Relationship
