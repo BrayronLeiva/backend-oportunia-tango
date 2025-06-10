@@ -2,6 +2,7 @@ package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.LoggedUser
 import edu.backend.taskapp.dtos.LocationRequestDTO
+import edu.backend.taskapp.dtos.StudentImageOutput
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentOutput
@@ -85,11 +86,11 @@ class StudentController(
 
     @GetMapping("/me")
     @ResponseBody
-    fun findUserStudent(): StudentOutput? {
+    fun findUserStudent(): StudentImageOutput? {
         val username = LoggedUser.get()
         val user = userService.findByEmail(username)
 
-        return studentService.findByUserId(user?.id ?: throw Exception("No student found"))
+        return studentService.withImagefindById(user?.id ?: throw Exception("No student found"))
     }
 
     /**

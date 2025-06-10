@@ -29,6 +29,17 @@ data class StudentOutput(
     //var ratings: List<RatingCompanyStudentOutput>,
     )
 
+data class StudentImageOutput(
+    var idStudent: Long,
+    var nameStudent: String,
+    var identification: String,
+    var personalInfo: String,
+    var experience: String,
+    var ratingStudent: Double,
+    var user: UserOutput,
+    var imageProfile: String? = null,
+)
+
 
 data class StudentMatchResult(
     val idStudent: Long,

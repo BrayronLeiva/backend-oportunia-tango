@@ -1,5 +1,6 @@
 package edu.backend.taskapp.mappers
 
+import edu.backend.taskapp.dtos.StudentImageOutput
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
 import edu.backend.taskapp.dtos.StudentQualificationsOutput
@@ -45,4 +46,10 @@ interface StudentMapper {
     fun studentListToStudentQualificationsOutputList(
         students: List<Student>
     ): List<StudentQualificationsOutput>
+
+    fun studentToStudentImageOutput(
+        student: Student
+    ): StudentImageOutput
+
+
 }

@@ -9,6 +9,7 @@ import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.UserRepository
 import edu.backend.taskapp.dtos.InternshipLocationFlagOutput
 import edu.backend.taskapp.dtos.InternshipMatchResult
+import edu.backend.taskapp.dtos.StudentImageOutput
 import edu.backend.taskapp.dtos.StudentMatchResult
 import edu.backend.taskapp.dtos.StudentQualificationsOutput
 import edu.backend.taskapp.dtos.UserInput
@@ -68,6 +69,7 @@ interface StudentService {
     fun findStudentsRequestingByCompany(id: Long): List<StudentOutput>
     fun findStudentsWithQualificationsRequestingByCompany(id: Long): List<StudentQualificationsOutput>
     fun uploadProfileImage(studentId: Long, file: MultipartFile): String
+    fun withImagefindById(id: Long): StudentImageOutput?
     /**
      * Get one Task by id
      * @param id of the Task
@@ -254,5 +256,23 @@ class AbstractStudentService(
         studentRepository.save(updatedStudent)
 
         return imageUrl
+    }
+
+
+    /**
+     * Get one Task by id
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(NoSuchElementException::class)
+    override fun withImagefindById(userId: Long): StudentImageOutput? {
+
+        val student: Optional<Student> = studentRepository.findByUserId(userId)
+        if (student.isEmpty) {
+            throw NoSuchElementException(String.format("The student with the user id: %s not found!", userId))
+        }
+        return studentMapper.studentToStudentImageOutput(
+            student.get(),
+        )
     }
 }
