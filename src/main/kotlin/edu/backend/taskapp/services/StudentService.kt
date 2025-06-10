@@ -134,7 +134,7 @@ class AbstractStudentService(
         val user = userRepository.findById(studentInput.userId!!)
             .orElseThrow { NoSuchElementException("User with ID ${studentInput.userId} not found") }
 
-        val student = studentMapper.studentInputToStudent(studentInput)
+        val student = studentMapper.studentInputToStudent(studentInput, user)
         student.user = user
 
 
