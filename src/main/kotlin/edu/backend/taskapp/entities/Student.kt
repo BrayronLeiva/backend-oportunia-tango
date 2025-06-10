@@ -38,6 +38,12 @@ data class Student(
 
     val ratingStudent: Double,
 
+    val imageProfile: String,
+
+    val homeLatitude: Double,
+
+    val homeLongitude: Double,
+
 
     // Entity Relationship
     @ManyToMany

@@ -6,6 +6,7 @@ import edu.backend.taskapp.mappers.InternshipLocationMapper
 import edu.backend.taskapp.InternshipLocationRepository
 import edu.backend.taskapp.InternshipRepository
 import edu.backend.taskapp.LocationCompanyRepository
+import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.dtos.InternshipLocationFlagOutput
 import edu.backend.taskapp.dtos.InternshipLocationMatchFlagOutput
 import edu.backend.taskapp.dtos.InternshipLocationMatchOutput
@@ -31,7 +32,7 @@ interface InternshipLocationService {
     fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput>
     fun findByRequestFlagByStudent(idStudent: Long): List<InternshipLocationFlagOutput>
     fun findRecommendedInternshipsFlagByStudent(studentId: Long, locationRequest: LocationRequestDTO): List<InternshipLocationMatchFlagOutput>
-    fun findRecommendedInternshipsAvailableByStudent(studentId: Long, locationRequest: LocationRequestDTO): List<InternshipLocationMatchOutput>
+    fun findRecommendedInternshipsAvailableByStudent(studentId: Long): List<InternshipLocationMatchOutput>
     fun findAllAvailable(studentId: Long): List<InternshipLocationOutput>
 
 }
@@ -55,7 +56,9 @@ class AbstractInternshipLocationService(
     @Autowired
     val requestService: RequestService,
     @Autowired
-    val aiService: AIService
+    val aiService: AIService,
+    @Autowired
+    val studentRepository: StudentRepository
 ) : InternshipLocationService {
 
     override fun findAll(): List<InternshipLocationOutput>? {
@@ -150,13 +153,14 @@ class AbstractInternshipLocationService(
 
     @Throws(java.util.NoSuchElementException::class)
     override fun findRecommendedInternshipsAvailableByStudent(
-        studentId: Long,
-        locationRequest: LocationRequestDTO
+        studentId: Long
     ): List<InternshipLocationMatchOutput> {
 
+        val student = studentRepository.findByIdStudent(studentId)
+
         val nearbyLocations = locationCompanyRepository.findLocationsNear(
-            locationRequest.latitude,
-            locationRequest.longitude,
+            student.get().homeLatitude,
+            student.get().homeLongitude,
             radiusKm = 30.0
         )
 

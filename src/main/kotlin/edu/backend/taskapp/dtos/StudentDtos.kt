@@ -47,7 +47,12 @@ data class StudentQualificationsOutput(
     var experience: String,
     var ratingStudent: Double,
     var user: UserOutput,
+    val imageProfile: String,
     var qualifications: List<QualificationOutput>
-    //var requests: List<RequestOutput>,
-    //var ratings: List<RatingCompanyStudentOutput>,
+)
+
+data class StudentHomeOutput(
+    var idStudent: Long,
+    var homeLatitude: String,
+    var homeLongitude: String
 )

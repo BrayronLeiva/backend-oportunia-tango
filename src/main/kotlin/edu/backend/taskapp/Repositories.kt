@@ -48,6 +48,8 @@ interface StudentRepository: JpaRepository<Student, Long> {
     fun findStudentsRequestingByCompanyId(@Param("companyId") companyId: Long): List<Student>
 
     fun findByUserId(userId: Long): Optional<Student>
+
+    fun findByIdStudent(@Param("studentId") studentId: Long): Optional<Student>
 }
 
 @Repository
