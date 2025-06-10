@@ -11,7 +11,9 @@ import edu.backend.taskapp.services.StudentService
 import edu.backend.taskapp.services.UserService
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("\${url.students}")
@@ -104,6 +106,16 @@ class StudentController(
 
         return studentService.findStudentsWithQualificationsRequestingByCompany(company!!.idCompany)
     }
+
+    @PostMapping("/{id}/upload-image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun uploadImage(
+        @PathVariable id: Long,
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<String> {
+        val imageUrl = studentService.uploadProfileImage(id, file)
+        return ResponseEntity.ok(imageUrl)
+    }
+
 
 
 }

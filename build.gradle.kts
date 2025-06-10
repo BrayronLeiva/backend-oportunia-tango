@@ -45,6 +45,9 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	//para manejar files
+	implementation("commons-io:commons-io:2.15.0") // o la versión más recient
+	implementation("com.cloudinary:cloudinary-http44:1.33.0") // o la última versión
 
 }
 

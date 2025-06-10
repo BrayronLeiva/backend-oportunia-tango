@@ -38,11 +38,11 @@ data class Student(
 
     var ratingStudent: Double,
 
-    val imageProfile: String,
+    var imageProfile: String,
 
-    val homeLatitude: Double,
+    var homeLatitude: Double,
 
-    val homeLongitude: Double,
+    var homeLongitude: Double,
 
 
     // Entity Relationship
@@ -55,8 +55,8 @@ data class Student(
     var qualifications: MutableSet<Qualification> = mutableSetOf(),
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
-    var user: User,
+    @JoinColumn(name = "user_id", nullable = true, referencedColumnName = "id")
+    var user: User? = null,
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
     var requests: MutableList<Request> = mutableListOf(),

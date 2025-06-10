@@ -1,5 +1,6 @@
 package edu.backend.taskapp.services
 
+import com.cloudinary.Cloudinary
 import edu.backend.taskapp.CompanyRepository
 import edu.backend.taskapp.dtos.StudentInput
 import edu.backend.taskapp.dtos.StudentOutput
@@ -18,8 +19,11 @@ import edu.backend.taskapp.mappers.UserMapper
 import edu.backend.taskapp.services.AIService.AIService
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.bind.Bindable.mapOf
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.Optional
+import kotlin.collections.mapOf
 
 interface StudentService {
     /**
@@ -63,7 +67,7 @@ interface StudentService {
     fun findRecommendedStudentsByCompany(id: Long): List<StudentMatchResult>
     fun findStudentsRequestingByCompany(id: Long): List<StudentOutput>
     fun findStudentsWithQualificationsRequestingByCompany(id: Long): List<StudentQualificationsOutput>
-
+    fun uploadProfileImage(studentId: Long, file: MultipartFile): String
     /**
      * Get one Task by id
      * @param id of the Task
@@ -88,7 +92,9 @@ class AbstractStudentService(
     @Autowired
     val aiService: AIService,
     @Autowired
-    val userMapper: UserMapper
+    val userMapper: UserMapper,
+    @Autowired
+    private val cloudinary: Cloudinary
 
     ) : StudentService {
     /**
@@ -126,12 +132,14 @@ class AbstractStudentService(
         val user = userRepository.findById(studentInput.userId!!)
             .orElseThrow { NoSuchElementException("User with ID ${studentInput.userId} not found") }
 
-        val student = studentMapper.studentInputToStudent(studentInput, user)
+        val student = studentMapper.studentInputToStudent(studentInput)
         student.user = user
 
-        return studentMapper.studentToStudentOutput(
+
+        val x = studentMapper.studentToStudentOutput(
             studentRepository.save(student)
         )
+        return x
     }
 
     /**
@@ -233,5 +241,18 @@ class AbstractStudentService(
         val students = studentRepository.findStudentsRequestingByCompanyId(id)
 
         return studentMapper.studentListToStudentQualificationsOutputList(students)
+    }
+
+    override fun uploadProfileImage(studentId: Long, file: MultipartFile): String {
+        val student = studentRepository.findById(studentId)
+            .orElseThrow { RuntimeException("Estudiante no encontrado") }
+
+        val uploadResult = cloudinary.uploader().upload(file.bytes, mapOf<String, Any>())
+        val imageUrl = uploadResult["secure_url"] as String
+
+        val updatedStudent = student.copy(imageProfile = imageUrl)
+        studentRepository.save(updatedStudent)
+
+        return imageUrl
     }
 }
