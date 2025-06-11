@@ -137,11 +137,9 @@ class AbstractStudentService(
         val student = studentMapper.studentInputToStudent(studentInput, user)
         student.user = user
 
-
-        val x = studentMapper.studentToStudentOutput(
+        return studentMapper.studentToStudentOutput(
             studentRepository.save(student)
         )
-        return x
     }
 
     /**

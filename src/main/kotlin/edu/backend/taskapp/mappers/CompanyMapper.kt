@@ -1,5 +1,6 @@
 package edu.backend.taskapp.mappers
 
+import edu.backend.taskapp.dtos.CompanyImageOutput
 import edu.backend.taskapp.dtos.CompanyInput
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.entities.Company
@@ -35,4 +36,9 @@ interface CompanyMapper {
         val company = companyInputToCompany(companyInput)
         return company.copy(user = user)
     }
+
+
+    fun companyToCompanyImageOutput(
+        company: Company
+    ): CompanyImageOutput
 }

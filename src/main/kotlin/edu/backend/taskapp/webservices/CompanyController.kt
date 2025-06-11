@@ -1,6 +1,7 @@
 package edu.backend.taskapp.webservices
 
 import edu.backend.taskapp.LoggedUser
+import edu.backend.taskapp.dtos.CompanyImageOutput
 import edu.backend.taskapp.dtos.CompanyInput
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.StudentMatchResult
@@ -70,11 +71,11 @@ class CompanyController(
 
     @GetMapping("/me")
     @ResponseBody
-    fun findUserCompany(): CompanyOutput? {
+    fun findUserCompany(): CompanyImageOutput? {
         val username = LoggedUser.get()
         val user = userService.findByEmail(username)
 
-        return companyService.findByUserId(user?.id ?: throw Exception("No company found"))
+        return companyService.findByUserIdwithImage(user?.id ?: throw Exception("No company found"))
     }
 
 

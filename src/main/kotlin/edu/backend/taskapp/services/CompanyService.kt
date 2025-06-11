@@ -3,6 +3,7 @@ package edu.backend.taskapp.services
 import edu.backend.taskapp.CompanyRepository
 import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.UserRepository
+import edu.backend.taskapp.dtos.CompanyImageOutput
 import edu.backend.taskapp.dtos.CompanyInput
 import edu.backend.taskapp.dtos.CompanyOutput
 import edu.backend.taskapp.dtos.StudentMatchResult
@@ -24,6 +25,7 @@ interface CompanyService {
     fun update(companyInput: CompanyInput): CompanyOutput?
     fun deleteById(id: Long)
     fun findByUserId(userId: Long): CompanyOutput?
+    fun findByUserIdwithImage(userId: Long): CompanyImageOutput?
 
 }
 
@@ -102,6 +104,23 @@ class AbstractCompanyService(
             throw NoSuchElementException(String.format("The company with the user id: %s not found!", userId))
         }
         return companyMapper.companyToCompanyOutput(
+            company.get(),
+        )
+    }
+
+    /**
+     * Get one Task by id
+     * @param id of the Task
+     * @return the Task found
+     */
+    @Throws(NoSuchElementException::class)
+    override fun findByUserIdwithImage(userId: Long): CompanyImageOutput? {
+
+        val company: Optional<Company> = companyRepository.findByUserId(userId)
+        if (company.isEmpty) {
+            throw NoSuchElementException(String.format("The company with the user id: %s not found!", userId))
+        }
+        return companyMapper.companyToCompanyImageOutput(
             company.get(),
         )
     }

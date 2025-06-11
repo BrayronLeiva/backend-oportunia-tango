@@ -38,9 +38,11 @@ data class Company(
     @Column(name = "internship_type")
     var internshipType: String,
 
+    var imageProfile: String,
+
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
-    var user: User,
+    @JoinColumn(name = "user_id", nullable = true, referencedColumnName = "id")
+    var user: User? = null,
 
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], orphanRemoval = true)
     var locationCompanies: List<LocationCompany> = mutableListOf(),

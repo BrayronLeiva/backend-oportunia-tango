@@ -11,6 +11,7 @@ data class CompanyInput(
     var contactCompany: Int? = null,
     var ratingCompany: Double? = null,
     var internshipType: String? = null,
+    var imageProfile: String? = null,
     var userId: Long? = null,
     var locationCompanies: List<LocationCompanyInput>? = emptyList(),
     var ratingCompanyStudents: List<RatingCompanyStudentInput>? = emptyList(),
@@ -34,4 +35,19 @@ data class CompanyOutput(
     //var ratingCompanyStudents: List<RatingCompanyStudentOutput>,
     //var recommendations: List<RecommendationOutput>,
     //var questions: List<QuestionOutput>
+)
+
+data class CompanyImageOutput(
+    var idCompany: Long,
+    var nameCompany: String,
+    var description: String,
+    var history: String,
+    var mision: String,
+    var vision: String,
+    var corporateCultur: String,
+    var contactCompany: Int,
+    var ratingCompany: Double,
+    var internshipType: String,
+    var imageProfile: String,
+    var user: UserOutput
 )
