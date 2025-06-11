@@ -38,10 +38,13 @@ data class Student(
 
     var ratingStudent: Double,
 
+    @Column(name = "image_profile")
     var imageProfile: String,
 
+    @Column(name = "home_latitude")
     var homeLatitude: Double,
 
+    @Column(name = "home_longitude")
     var homeLongitude: Double,
 
 

@@ -38,6 +38,7 @@ data class Company(
     @Column(name = "internship_type")
     var internshipType: String,
 
+    @Column(name = "image_profile")
     var imageProfile: String,
 
     @OneToOne

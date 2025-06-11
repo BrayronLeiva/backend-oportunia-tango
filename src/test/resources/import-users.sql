@@ -3,21 +3,21 @@ ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('users_id_seq');
 
 INSERT INTO public.users (create_date, email, enabled, first_name, last_name, password, token_expired)
 VALUES ('2020-08-30 18:23:52.000000', 'mike@guzmanalan.com', true, 'Maikol',
-        'Guzman', '$2a$10$rNuc31nzTm5.ajvMZEp.8.d8eCy4CRMfhl/x4PGhoBHHjlZ6k2o9m', false),
+        'Guzman', '$2a$10$sboEGvf5fx/dyLIhwBdiZuX7DtN0bTSMpt5MEUqiv0HzWV9uFlvf6', false),
        ('2024-04-25 10:00:00', 'sofia.mendez@example.com', true, 'Sofía',
-        'Méndez', '$2a$10$xNh8gcZovLbRQ9NXKp4Qje28oeF4rGiaNhnN0IUFqBumEplakk7yi', false),
+        'Méndez', '$2a$10$QX9Sy7OB29XG01FKr3ALoej3A/cOGTagh0G3G9g6EnQ36xabIbRyO', false),
        ('2024-04-25 10:05:00', 'carlos.rojas@example.com', true, 'Carlos',
-        'Rojas', '$2a$10$Rsd91jhNhQv/gpKXrXjuiuZLEVW.EO9REr9mSTaZ.fXJyjeXdeSXG', false),
+        'Rojas', '$2a$10$ETpRCMDg0QTJlKqsSJpkK.jHipoqhqaRet3Q00kV8ehHErIjlIxKC', false),
        ('2024-04-25 10:10:00', 'laura.martinez@example.com', true, 'Laura',
-        'Martínez', '$2a$10$XjIV5KJKIx9eSsIfGmsP4u9C3iEB1MBwaNq9.SFU8Ytd5u84HUToO', false),
+        'Martínez', '$2a$10$kbsEXtOycIybNbEbctZ0zO1rarNr7O274BWPWDVuuL5KaY81XcVPi', false),
        ( '2024-04-25 10:15:00', 'andres.solis@example.com', true, 'Andrés',
-        'Solis', '$2a$10$ezFTxLYZTg04BN9qMeCfG.IEvKP1wTIZm2GIkoO64clRW0x4lYkRC', false),
+        'Solis', '$2a$10$t2Nt7D644m2k3A1P/tyTA.EayG3L5V7DVdORHD.VlAs5oQn9uw6LO', false),
        ( '2024-04-26 11:15:00', 'pepe.mendez@example.com', true, 'Pepe',
-        'Mendez', '$2a$10$ulNdX/6qMjELBuFL1QHvFO1mzKnapMjGhGsY.DvdBkeWTJ.L411cK', false),
+        'Mendez', '$2a$10$35Zi970hl0A8wNbben1xhOnl5aNRKp/puhM0v6dlkOgEdMQyh8AFS', false),
        ('2024-04-26 12:00:00', 'mariana.torres@example.com', true, 'Mariana',
-        'Torres', '$2a$10$P3zqEfjVQwu0zzjw7MkeaOjZgHtUAzpF8SC02nlXf0safaxUqOC2G', false),
+        'Torres', '$2a$10$qwLMhpYRAif/wie2bTZiweHwe29Q2yxqRcQuYXBVpPtegNZyzavjO', false),
        ('2024-04-26 12:30:00', 'diego.ramirez@example.com', true, 'Diego',
-        'Ramírez', '$2a$10$o3vLov/lamF/Tah46dRmsukcdYSgiioI4LWlCXeZjPVZOwgdd9ove', false);
+        'Ramírez', '$2a$10$2dODS3w/MFaaEek2AANLHerwVG.biypZW0FgA5j2DwoLZfE5ciZya', false);
 
 -- mike@guzmanalan.com, password: 1234
 -- sofia.mendez@example.com, password: sofia123
