@@ -23,6 +23,9 @@ data class StudentOutput(
     var personalInfo: String,
     var experience: String,
     var ratingStudent: Double,
+    var imageProfile: String,
+    var homeLatitude: Double,
+    var homeLongitude: Double,
     var user: UserOutput
     //var qualifications: List<QualificationOutput>,
     //var requests: List<RequestOutput>,

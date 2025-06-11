@@ -305,6 +305,7 @@ class LoadInitData(
             contactCompany = 88889999,
             ratingCompany = 4.7,
             internshipType = "Remote",
+            imageProfile = "",
             user = user
         )
 
