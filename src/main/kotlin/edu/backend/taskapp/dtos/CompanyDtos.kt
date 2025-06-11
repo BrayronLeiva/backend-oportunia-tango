@@ -30,7 +30,7 @@ data class CompanyOutput(
     var contactCompany: Int,
     var ratingCompany: Double,
     var internshipType: String,
-    var imageProfile: String,
+    var imageProfile: String?,
     var user: UserOutput,
     //var locationCompanies: List<LocationCompanyOutput>,
     //var ratingCompanyStudents: List<RatingCompanyStudentOutput>,

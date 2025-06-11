@@ -38,8 +38,8 @@ data class Company(
     @Column(name = "internship_type")
     var internshipType: String,
 
-    @Column(name = "image_profile")
-    var imageProfile: String,
+    @Column(name = "image_profile", nullable = true)
+    var imageProfile: String? = null,
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = true, referencedColumnName = "id")

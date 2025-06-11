@@ -28,10 +28,10 @@ interface InternshipLocationService {
     fun update(internshipLocationInput: InternshipLocationInput): InternshipLocationOutput?
     fun deleteById(id: Long)
     fun findByLocationCompanyId(id: Long): List<InternshipLocationOutput>
-    fun findRecommendedInternshipsByStudent(id: Long,  locationRequest: LocationRequestDTO): List<InternshipLocationMatchOutput>
+    fun findRecommendedInternshipsByStudent(id: Long): List<InternshipLocationMatchOutput>
     fun findByLocationCompanyIdAndRequestFlagByStudent(idLocationCompany: Long, idStudent: Long): List<InternshipLocationFlagOutput>
     fun findByRequestFlagByStudent(idStudent: Long): List<InternshipLocationFlagOutput>
-    fun findRecommendedInternshipsFlagByStudent(studentId: Long, locationRequest: LocationRequestDTO): List<InternshipLocationMatchFlagOutput>
+    fun findRecommendedInternshipsFlagByStudent(studentId: Long): List<InternshipLocationMatchFlagOutput>
     fun findRecommendedInternshipsAvailableByStudent(studentId: Long): List<InternshipLocationMatchOutput>
     fun findAllAvailable(studentId: Long): List<InternshipLocationOutput>
 
@@ -127,17 +127,17 @@ class AbstractInternshipLocationService(
      */
     @Throws(java.util.NoSuchElementException::class)
     override fun findRecommendedInternshipsByStudent(
-        studentId: Long,
-        locationRequest: LocationRequestDTO
+        studentId: Long
     ): List<InternshipLocationMatchOutput> {
 
+        val student = studentRepository.findByIdStudent(studentId)
+        val studentDto = studentService.findById(studentId)
+
         val nearbyLocations = locationCompanyRepository.findLocationsNear(
-            locationRequest.latitude,
-            locationRequest.longitude,
+            student.get().homeLatitude,
+            student.get().homeLongitude,
             radiusKm = 30.0
         )
-
-        val studentDto = studentService.findById(studentId)
 
         val internshipLocationList = nearbyLocations
             .flatMap { location ->
@@ -199,13 +199,14 @@ class AbstractInternshipLocationService(
      */
     @Throws(java.util.NoSuchElementException::class)
     override fun findRecommendedInternshipsFlagByStudent(
-        studentId: Long,
-        locationRequest: LocationRequestDTO
-    ): List<InternshipLocationMatchFlagOutput> {
+        studentId: Long): List<InternshipLocationMatchFlagOutput> {
+
+
+        val student = studentRepository.findByIdStudent(studentId)
 
         val nearbyLocations = locationCompanyRepository.findLocationsNear(
-            locationRequest.latitude,
-            locationRequest.longitude,
+            student.get().homeLatitude,
+            student.get().homeLongitude,
             radiusKm = 30.0
         )
 

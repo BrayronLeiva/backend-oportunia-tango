@@ -64,7 +64,7 @@ data class StudentQualificationsOutput(
     var experience: String,
     var ratingStudent: Double,
     var user: UserOutput,
-    val imageProfile: String,
+    val imageProfile: String?,
     var qualifications: List<QualificationOutput>
 )
 

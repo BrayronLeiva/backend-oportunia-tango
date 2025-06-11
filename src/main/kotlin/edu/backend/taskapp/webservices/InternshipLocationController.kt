@@ -57,20 +57,16 @@ class InternshipLocationController(
 
     @GetMapping("recommendations")
     @ResponseBody
-    fun recommendInternshipsLocationsForStudent(
-        @RequestParam lat: Double,
-        @RequestParam lng: Double
-    ): List<InternshipLocationMatchOutput>  {
+    fun recommendInternshipsLocationsForStudent(): List<InternshipLocationMatchOutput>  {
         val username = LoggedUser.get()
 
         val user = userService.findByEmail(username)
         val student = studentService.findByUserId(user?.id ?: throw Exception("No student found"))
-        val location = LocationRequestDTO(lat, lng)
 
-        return internshipLocationService.findRecommendedInternshipsByStudent(student!!.idStudent, location)
+        return internshipLocationService.findRecommendedInternshipsByStudent(student!!.idStudent)
     }
 
-    @GetMapping("recommendations/available")
+    @GetMapping("available/recommendations")
     @ResponseBody
     fun recommendInternshipsLocationsAvailableForStudent(): List<InternshipLocationMatchOutput>  {
         val username = LoggedUser.get()
@@ -109,17 +105,14 @@ class InternshipLocationController(
 
     @GetMapping("recommendations/flag")
     @ResponseBody
-    fun recommendInternshipsLocationsFlagForStudent(
-        @RequestParam lat: Double,
-        @RequestParam lng: Double
-    ): List<InternshipLocationMatchFlagOutput>  {
+    fun recommendInternshipsLocationsFlagForStudent(): List<InternshipLocationMatchFlagOutput>  {
         val username = LoggedUser.get()
 
         val user = userService.findByEmail(username)
         val student = studentService.findByUserId(user?.id ?: throw Exception("No student found"))
-        val location = LocationRequestDTO(lat, lng)
 
-        return internshipLocationService.findRecommendedInternshipsFlagByStudent(student!!.idStudent, location)
+
+        return internshipLocationService.findRecommendedInternshipsFlagByStudent(student!!.idStudent)
     }
 
     @GetMapping("available")
