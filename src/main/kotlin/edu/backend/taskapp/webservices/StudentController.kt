@@ -86,11 +86,11 @@ class StudentController(
 
     @GetMapping("/me")
     @ResponseBody
-    fun findUserStudent(): StudentImageOutput? {
+    fun findUserStudent(): StudentOutput? {
         val username = LoggedUser.get()
         val user = userService.findByEmail(username)
 
-        return studentService.withImagefindById(user?.id ?: throw Exception("No student found"))
+        return studentService.findByUserId(user?.id ?: throw Exception("No student found"))
     }
 
     /**
