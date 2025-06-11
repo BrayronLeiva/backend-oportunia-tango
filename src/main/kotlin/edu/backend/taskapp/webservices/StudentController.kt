@@ -112,9 +112,10 @@ class StudentController(
     fun uploadImage(
         @PathVariable id: Long,
         @RequestParam("file") file: MultipartFile
-    ): ResponseEntity<String> {
+    ): ResponseEntity<Map<String, String>> {
         val imageUrl = studentService.uploadProfileImage(id, file)
-        return ResponseEntity.ok(imageUrl)
+        return ResponseEntity.ok(mapOf("message" to "Imagen subida correctamente"))
+
     }
 
 

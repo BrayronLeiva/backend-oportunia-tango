@@ -253,6 +253,7 @@ class AbstractStudentService(
         val updatedStudent = student.copy(imageProfile = imageUrl)
         studentRepository.save(updatedStudent)
 
+
         return imageUrl
     }
 
