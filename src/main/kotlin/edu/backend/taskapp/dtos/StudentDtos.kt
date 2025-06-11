@@ -27,9 +27,6 @@ data class StudentOutput(
     var homeLatitude: Double,
     var homeLongitude: Double,
     var user: UserOutput
-    //var qualifications: List<QualificationOutput>,
-    //var requests: List<RequestOutput>,
-    //var ratings: List<RatingCompanyStudentOutput>,
     )
 
 data class StudentImageOutput(
@@ -52,6 +49,9 @@ data class StudentMatchResult(
     var experience: String,
     var ratingStudent: Double,
     var user: UserOutput,
+    var imageProfile: String,
+    var homeLatitude: Double,
+    var homeLongitude: Double,
     val score: Int,
     val reason: String
 )
@@ -64,14 +64,9 @@ data class StudentQualificationsOutput(
     var experience: String,
     var ratingStudent: Double,
     var user: UserOutput,
-    val imageProfile: String?,
+    val imageProfile: String,
+    var homeLatitude: Double,
+    var homeLongitude: Double,
     var qualifications: List<QualificationOutput>
 )
-
-data class StudentHomeOutput(
-    var idStudent: Long,
-    var homeLatitude: String,
-    var homeLongitude: String
-)
-
 

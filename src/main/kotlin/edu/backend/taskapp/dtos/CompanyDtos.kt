@@ -49,6 +49,6 @@ data class CompanyImageOutput(
     var contactCompany: Int,
     var ratingCompany: Double,
     var internshipType: String,
-    var imageProfile: String,
+    var imageProfile: String?,
     var user: UserOutput
 )

@@ -89,6 +89,9 @@ class AbstractAIService(
             ratingStudent = student.ratingStudent,
             user = student.user,
             reason = reason,
+            imageProfile = student.imageProfile,
+            homeLatitude = student.homeLatitude,
+            homeLongitude = student.homeLongitude,
             score = score,
         )
     }
