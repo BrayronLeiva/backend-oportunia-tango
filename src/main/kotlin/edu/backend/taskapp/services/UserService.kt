@@ -51,7 +51,13 @@ class AbstractUserService(
     }
 
     override fun create(userInput: UserInput): UserOutput? {
+
         val user = userMapper.userInputToUser(userInput)
+
+        if (userRepository.findByEmail(user.email).isPresent){
+            throw Exception("The user with the id: ${userInput.email} already exists!")
+        }
+
         user.password = passwordEncoder.encode(userInput.password)
         return userMapper.userToUserOutput(
             userRepository.save(user)
