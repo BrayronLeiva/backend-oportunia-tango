@@ -25,6 +25,7 @@ data class UserInput(
     var email: String?=null,
     var password: String?=null,
     var enabled: Boolean?=null,
+    var tokenExpired: Boolean?=null,
     var createDate: Date?= Date(),
     var roleList: Set<RoleDetails>?=emptySet(),
 )
