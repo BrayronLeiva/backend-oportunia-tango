@@ -1,5 +1,6 @@
 package edu.backend.taskapp.services
 
+import com.cloudinary.Cloudinary
 import edu.backend.taskapp.CompanyRepository
 import edu.backend.taskapp.StudentRepository
 import edu.backend.taskapp.UserRepository
@@ -16,6 +17,7 @@ import edu.backend.taskapp.services.AIService.AIService
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 interface CompanyService {
@@ -26,7 +28,7 @@ interface CompanyService {
     fun deleteById(id: Long)
     fun findByUserId(userId: Long): CompanyOutput?
     fun findByUserIdwithImage(userId: Long): CompanyImageOutput?
-
+    fun uploadProfileImage(companyId: Long, file: MultipartFile): String
 }
 
 @Service
@@ -42,7 +44,9 @@ class AbstractCompanyService(
     @Autowired
     val studentMapper: StudentMapper,
     @Autowired
-    val aiService: AIService
+    val aiService: AIService,
+    @Autowired
+    private val cloudinary: Cloudinary
 ) : CompanyService {
 
     override fun findAll(): List<CompanyOutput>? {
@@ -125,7 +129,19 @@ class AbstractCompanyService(
         )
     }
 
+    override fun uploadProfileImage(companyId: Long, file: MultipartFile): String {
+        val company = companyRepository.findById(companyId)
+            .orElseThrow { RuntimeException("Compania no encontrada") }
 
+        val uploadResult = cloudinary.uploader().upload(file.bytes, mapOf<String, Any>())
+        val imageUrl = uploadResult["secure_url"] as String
+
+        val updatedCompany = company.copy(imageProfile = imageUrl)
+        companyRepository.save(updatedCompany)
+
+
+        return imageUrl
+    }
 
 
 

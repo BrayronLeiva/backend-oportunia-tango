@@ -11,7 +11,9 @@ import edu.backend.taskapp.services.CompanyService
 import edu.backend.taskapp.services.UserService
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("\${url.companies}")
@@ -78,5 +80,12 @@ class CompanyController(
         return companyService.findByUserIdwithImage(user?.id ?: throw Exception("No company found"))
     }
 
-
+    @PostMapping("/{id}/upload-image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun uploadImage(
+        @PathVariable id: Long,
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<Map<String, String>> {
+        val imageUrl = companyService.uploadProfileImage(id, file)
+        return ResponseEntity.ok(mapOf("imageUrl" to imageUrl))
+    }
 }
