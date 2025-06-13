@@ -93,7 +93,7 @@ class JwtSecurityConfiguration {
             }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/".plus(URL_UNSECURE).plus("/**")).permitAll()
+                    .requestMatchers("/v1/unsecure/**").permitAll()
                     .requestMatchers(HttpMethod.POST, URL_SIGNUP).permitAll()
                     .requestMatchers("/**").authenticated()
             }
