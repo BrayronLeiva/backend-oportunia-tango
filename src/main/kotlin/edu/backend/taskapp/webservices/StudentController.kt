@@ -107,17 +107,4 @@ class StudentController(
 
         return studentService.findStudentsWithQualificationsRequestingByCompany(company!!.idCompany)
     }
-
-    @PostMapping("/{id}/upload-image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun uploadImage(
-        @PathVariable id: Long,
-        @RequestParam("file") file: MultipartFile
-    ): ResponseEntity<Map<String, String>> {
-        val imageUrl = studentService.uploadProfileImage(id, file)
-        return ResponseEntity.ok(mapOf("imageUrl" to imageUrl))
-
-    }
-
-
-
 }
