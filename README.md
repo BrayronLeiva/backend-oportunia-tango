@@ -39,5 +39,3 @@ This backend is built using an N-Tier (multi-layer) architecture, which clearly 
 responsibilities between presentation, business logic, domain, and data. Its purpose is to
 provide secure and scalable REST services that interact with the mobile frontend, while also
 integrating smart features using the OpenAI API
-
-## Key Features
